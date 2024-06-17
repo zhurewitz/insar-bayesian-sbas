@@ -65,7 +65,7 @@ end
 
 %% Level-2 Processing -- Process Phase Closure Mask and Correct Interferograms
 
-flow.processClosureMask2(h5filename);
+flow.processClosureMask(h5filename);
 
 flow.applyClosureCorrection(h5filename);
 
