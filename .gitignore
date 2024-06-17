@@ -22,3 +22,7 @@
 *.shp
 *.dbf
 *.prj
+*api
+*key
+*api.txt
+*key.txt
