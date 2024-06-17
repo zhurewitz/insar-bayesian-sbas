@@ -31,7 +31,13 @@
 *key
 *api.txt
 *key.txt
+*APIkey.mat
 Data/
 Figures/
 Local/
 +local/
+Private/
+PRIVATE/
+private/
++private/
+!workflow_template.m
