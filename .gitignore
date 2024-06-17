@@ -40,4 +40,5 @@ Private/
 PRIVATE/
 private/
 +private/
+workflow*.m
 !workflow_template.m
