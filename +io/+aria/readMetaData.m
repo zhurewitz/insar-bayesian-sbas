@@ -21,11 +21,7 @@ end
 T.Track= str2double(S{5});
 
 % Direction
-if S{3} == 'A'
-    T.Direction= 'Ascending';
-elseif S{3} == 'D'
-    T.Direction= 'Descending';
-end
+T.Direction= S{3};
 
 % Dates
 [dates,timeForward]= io.aria.interferogramDates(filename);
@@ -40,7 +36,7 @@ T.SpatialBaseline= mean(io.aria.readBaseline(filename),'all');
 [Lat,Long]= io.aria.readLatLong(filename);
 T.BoundingBox= [min(Long) max(Long) min(Lat) max(Lat)];
 
-T.dL= abs([diff(Long(1:2)) diff(Lat(1:2))]);
+T.dL= abs(diff(Long(1:2)));
 
 % Polygon
 V= io.aria.readBoundingPolygon(filename);
@@ -51,8 +47,6 @@ T.TimeForward= timeForward;
 
 % Read wavelength
 T.Wavelength_mm= 1000*ncread(filename,'science/radarMetaData/wavelength');
-
-T.UniqueID= S{end-1}; % NOTE: NOT ACTUALLY UNIQUE!
 
 % Filenames
 T.Filename= strcat(name,ext);

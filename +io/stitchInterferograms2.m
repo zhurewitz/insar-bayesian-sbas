@@ -10,7 +10,7 @@ Nframes= length(filelist);
 % Load metadata
 frameTable= table;
 for i= 1:Nframes
-    frameTable(i,:)= io.aria.readMetaData2(filelist(i));
+    frameTable(i,:)= io.aria.readMetaData(filelist(i));
     
     Mission= string(frameTable.Mission);
     
