@@ -42,7 +42,7 @@ end
 
 % Dates
 if isempty(PrimaryDate)
-    [PrimaryDate,SecondaryDate]= io.loadL1Dates(L1filename,Mission,Track);
+    [PrimaryDate,SecondaryDate]= io.loadDates(L1filename,'L1',Mission,Track);
 end
 
 if isempty(PrimaryDate)
@@ -62,7 +62,7 @@ path= fullfile(basepath,trackstr);
 [~,iay,~]= intersect(commonGrid.LatLim(1),grid.LatLim(1));
 
 
-[PrimaryDateFile,SecondaryDateFile]= io.loadL1Dates(L1filename,Mission,Track);
+[PrimaryDateFile,SecondaryDateFile]= io.loadDates(L1filename,'L1',Mission,Track);
 
 k= sum((PrimaryDate == PrimaryDateFile' & SecondaryDate == SecondaryDateFile').*(1:length(PrimaryDateFile)),2);
 
