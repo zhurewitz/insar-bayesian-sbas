@@ -42,3 +42,4 @@ private/
 +private/
 workflow*.m
 !workflow_template.m
+!images/*.png
