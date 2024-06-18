@@ -54,7 +54,7 @@ frameTable= flow.keepConnectedGraph(frameTable);
 Missions= unique(frameTable.Mission);
 Tracks= unique(frameTable.Track);
 
-t1= toc2;
+t1= utils.tictoc;
 for m= 1:length(Missions)
     mission= Missions(m);
 
