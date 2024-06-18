@@ -13,7 +13,7 @@ end
 
 [Missions,Tracks]= io.readMissionTracks(L2filename,'L2');
 
-t2= toc2;
+t2= utils.tictoc;
 for m= 1:length(Missions)
     Mission= Missions(m);
     for t= 1:length(Tracks)
