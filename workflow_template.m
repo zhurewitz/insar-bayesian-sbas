@@ -3,7 +3,7 @@
 % *** User input ***
 
 % Directories
-datadirs= ["/full/path/to/data1" "/full/path/to/data2"]; 
+datadirs= ["/full/path/to/data1","/full/path/to/data2"]; 
 savedir= "/full/path/to/save/directory/";
 
 % Bounds
@@ -19,7 +19,7 @@ savedir= "/full/path/to/save/directory/";
 % *Load vectors coastlineLongitude and coastlineLatitude
 
 % Load OpenTopography API key
-load Private/APIkey.mat APIkey
+% *Load APIkey as string
 
 % Output filenames
 L1filename= fullfile(savedir,'processingStoreL1.h5');
@@ -37,10 +37,12 @@ end
 % Grid metadata
 flow.generateGrid(L1filename,LongLim,LatLim,referenceLongitude,...
     referenceLatitude, coastlineLongitude,coastlineLatitude);
+flow.generateGrid(L2filename,LongLim,LatLim);
+flow.generateGrid(L3filename,LongLim,LatLim);
 
 % Import DEM
 if ~isempty(APIkey)
-    io.importElevation(L1filename,APIkey)
+    io.importElevation([L1filename,L2filename,L3filename],APIkey)
 end
 
 
