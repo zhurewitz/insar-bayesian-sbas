@@ -49,7 +49,7 @@ Interferograms in NISAR format are archived and can be downloaded from the Alask
 
 2. Select interferogram tracks. The code is not guaranteed to work if there is only a tiny sliver of overlap between the study region and the interferogram track, so it is important to manually determine suitable tracks. If desired, expand the bounding box to accomodate tracks which barely intersect. 
 
-    1. In MATLAB, copy the `areaOfInterest_template.m` script to your project directory and rename as desired. Fill out and run. The displayed text ("POLYGON...") will be copied to your clipboard.
+    1. Copy the `areaOfInterest_template.m` script to your project directory and rename as desired. In MATLAB, fill it out and run. The displayed text ("POLYGON...") will be copied to your clipboard.
 
     3. On the ASF Vertex website, in the dataset menu, select "ARIA S1 GUNW". Click the Filters icon and paste the text into the Area of Interest box. 
 
@@ -57,7 +57,7 @@ Interferograms in NISAR format are archived and can be downloaded from the Alask
 
     4. Select update and note down all the interferogram paths/tracks which intersect the bounding box with significant overlap. 
 
-3. In MATLAB, copy the `dataDownload_template.m` script to your project directory and rename as desired. Fill it out and run. 
+3. Copy the `dataDownload_template.m` script to your project directory and rename as desired. In MATLAB, fill it out and run. 
 
     You will need to provide:
 
@@ -68,3 +68,21 @@ Interferograms in NISAR format are archived and can be downloaded from the Alask
     * The start and end date of your desired output timeseries. 
 
     * The tracks you selected in the previous step.
+
+### Processing
+
+Copy the `workflow_template.m` script into your project directory and rename as desired. Fill it out and run. 
+
+You will need to provide:
+
+* The full paths to your data directories.
+
+* The full path to a suitable work/save directory for the processing steps and output. A directory on an external hard drive is recommended for some users. 
+
+* The bounding limits of your study area. 
+
+* The vertices of a polygon demarking the your reference area.
+
+* The vertices of a polygon demarking the coastline. 
+
+* Your OpenTopography API key.

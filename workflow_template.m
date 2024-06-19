@@ -2,9 +2,11 @@
 
 % *** User input ***
 
-% Directories
+% Data directories
 datadirs= ["/full/path/to/data1","/full/path/to/data2"]; 
-savedir= "/full/path/to/save/directory/";
+
+% Work/Save directory
+workdir= "/full/path/to/work/directory/";
 
 % Bounds
 % LatLim= [minLat maxLat];
@@ -18,20 +20,20 @@ savedir= "/full/path/to/save/directory/";
 % Coastline polygon
 % *Load vectors coastlineLongitude and coastlineLatitude
 
-% Load OpenTopography API key
-% *Load APIkey as string
+% OpenTopography API key
+APIkey= "my11111API22222key33333";
 
 % Output filenames
-L1filename= fullfile(savedir,'processingStoreL1.h5');
-L2filename= fullfile(savedir,'processingStoreL2.h5');
-L3filename= fullfile(savedir,'processingStoreL3.h5');
+L1filename= fullfile(workdir,'processingStoreL1.h5');
+L2filename= fullfile(workdir,'processingStoreL2.h5');
+L3filename= fullfile(workdir,'processingStoreL3.h5');
 
 
 
 %% Create File and Save Grid
 
-if ~exist(savedir,'dir')
-    mkdir(savedir)
+if ~exist(workdir,'dir')
+    mkdir(workdir)
 end
 
 % Grid metadata
