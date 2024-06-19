@@ -1,52 +1,70 @@
-# BInSAR - Bayesian SBAS Timeseries Estimation for InSAR
+# BInSAR - Bayesian Displacement Timeseries Estimation for InSAR
+
+## Introduction
+
+Bayesian Displacement Timeseries Estimation for InSAR (**BInSAR**) is a library written in MATLAB to process NISAR-formatted interferometric data products. **BInSAR** is specifically designed to estimate temporally smooth surface displacement signals, such as those resulting from groundwater movement. 
+
+**BInSAR** contains powerful features for generation and analysis of displacement timeseries in InSAR, including:
+
+* A Bayesian mathematical framework, including uncertainty quantification of the SBAS inversion
+
+* Data-driven tropospheric noise rejection 
+
+* The ability to combine multiple look geometries into a 3D timeseries of displacement
+
+* The ability to compare multiple look geometries against each other or against GNSS displacement timeseries
+
+* Compatibility with the data product format for the upcoming NISAR mission
 
 
 
 ## Getting Started
 
+### Requirements
 
+You will need the following:
+* [MATLAB](https://www.mathworks.com/products/matlab.html) and a MATLAB license
+* A [NASA Earthdata](https://www.earthdata.nasa.gov/) account
+* An [OpenTopography](https://opentopography.org/) account
+* A [GitHub](https://github.com/) account
+* Sufficient hard drive storage space for the data products
 
-### Fast Installation Instructions
+### Installation
 
+The fast installation instructions are as follows: 
 1. Clone this library and the [`matlab-fast-geometry`](https://github.com/zhurewitz/matlab-fast-geometry) library into a dedicated MATLAB-specific `Libraries` directory separate from your intended MATLAB work directory.
 2. Add all folders and subfolders of `Libraries` to your MATLAB path.
 
+For more detailed installation instructions, see the [INSTALL.md](INSTALL.md) file.
 
-### Detailed Installation Instructions
+### Data Download
 
-1. Open MATLAB and navigate to your preferred MATLAB work directory using the top bar (circled in red). Right click in the Current Folder tab to make new directories as circled in green.
+<img src="images/vertex.png" width=1000>
 
-    <img src="images/newFolder.png" width=500>
+Interferograms in NISAR format are archived and can be downloaded from the Alaska Satellite Facility's (ASF) [Vertex](https://search.asf.alaska.edu/#/?dataset=SENTINEL-1%20INTERFEROGRAM%20(BETA)) website. At the present, they are only available over a few limited regions for calibration and validation purposes. You will need a [NASA Earthdata](https://www.earthdata.nasa.gov/) account to download data products. 
 
-1. Make your favorite version of the following directory structure in your MATLAB work directory.
 
-    <img src="images/directoryStructure.png" width=200>
 
-1. Clone this repository and the [`matlab-fast-geometry`](https://github.com/zhurewitz/matlab-fast-geometry) library into the `Libraries` directory.  
+1. Select a bounding box for your study area, consisting of a south and north latitude and a west and east longitude. 
 
-    1. Open the Terminal application (in Utilities, inside the Applications folder).
-    
-    2. Navigate to the `Libraries` directory using the `cd` command. Use the top bar (red circle) in the image in step 1 to make the path. For the above example the command would be:
+2. Select interferogram tracks. The code is not guaranteed to work if there is only a tiny sliver of overlap between the study region and the interferogram track, so it is important to manually determine suitable tracks. If desired, expand the bounding box to accomodate tracks which barely intersect. 
 
-        ```
-        cd /Users/zhurewit/Desktop/Tutorial/MATLAB/Libraries
-        ```
+    1. In MATLAB, copy the `areaOfInterest_template.m` script to your project directory and rename as desired. Fill out and run. The displayed text ("POLYGON...") will be copied to your clipboard.
 
-    2. Run the following commands:
+    3. On the ASF Vertex website, in the dataset menu, select "ARIA S1 GUNW". Click the Filters icon and paste the text into the Area of Interest box. 
 
-        ```
-        git clone https://github.com/zhurewitz/insar-bayesian-sbas.git
-        git clone https://github.com/zhurewitz/matlab-fast-geometry.git
-        ```
+        * Do NOT select anything for the "File Type" filter, as there is a bug which prevents reading of data after 2022 (as of June 2024).
 
-    3. Your directory structure should now look like:
+    4. Select update and note down all the interferogram paths/tracks which intersect the bounding box with significant overlap. 
 
-        <img src="images/cloned.png" width=300>
+3. In MATLAB, copy the `dataDownload_template.m` script to your project directory and rename as desired. Fill it out and run. 
 
-1. Right click on the `Libraries` folder and add selected folders and subfolders to the working path as shown below.
+    You will need to provide:
 
-    <img src="images/addToPath.png" width=500>
+    * The full path to your data directory. A set of interferogram products can easily take up 100s of Gb of memory, so a directory in an external hard drive is recommended for some users. 
 
-    The directories and files which have been added to the path are now highlighted, while those not on the path remain faded.
+    * The latitude and longitude limits of your study area. 
 
-    <img src="images/pathAdded.png" width=200>
+    * The start and end date of your desired output timeseries. 
+
+    * The tracks you selected in the previous step.

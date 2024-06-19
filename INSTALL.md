@@ -1,18 +1,12 @@
-# BInSAR - Bayesian SBAS Timeseries Estimation for InSAR
+# Installing BInSAR
 
-
-
-## Getting Started
-
-
-
-### Fast Installation Instructions
+## Fast Installation Instructions
 
 1. Clone this library and the [`matlab-fast-geometry`](https://github.com/zhurewitz/matlab-fast-geometry) library into a dedicated MATLAB-specific `Libraries` directory separate from your intended MATLAB work directory.
 2. Add all folders and subfolders of `Libraries` to your MATLAB path.
 
 
-### Detailed Installation Instructions
+## Detailed Installation Instructions
 
 1. Open MATLAB and navigate to your preferred MATLAB work directory using the top bar (circled in red). Right click in the Current Folder tab to make new directories as circled in green.
 
