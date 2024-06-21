@@ -1,25 +1,25 @@
-%% Read Line-of-Sight Displacement
+%% Read Line-of-Sight Displacement -- HyP3 Format
 
-function LOSdisplacement= readLOSdisplacement(metaData,grid)
+function [LOSdisplacement,frameLat,frameLong,mask]= ...
+    readLOSdisplacement(filename)
 
-dL= grid.dL;
+dL= 1/1200;
 
-filename= fullfile(metaData.Fullname,strcat(metaData.Filename,'_los_disp.tif'));
+metaData= io.hyp3.shortMetaData(filename);
 
-boundingBox= metaData.BoundingBox;
+losfilename= fullfile(metaData.Fullname,strcat(metaData.Filename,'_los_disp.tif'));
 
-bx= floor(boundingBox(1)/dL)-1:ceil(boundingBox(2)/dL)+1;
-by= floor(boundingBox(3)/dL)-1:ceil(boundingBox(4)/dL)+1;
+boundingBox= io.readBoundingBox(filename);
 
-[~,iax,~]= intersect(round(grid.Long/dL),bx);
-[~,iay,~]= intersect(round(grid.Lat/dL),by);
+frameLong= (floor(boundingBox(1)/dL)-1:ceil(boundingBox(2)/dL)+1)*dL;
+frameLat= (floor(boundingBox(3)/dL)-1:ceil(boundingBox(4)/dL)+1)*dL;
 
 % Query points
 % Note: only querying within the bounding box for efficiency
-[LONGQ,LATQ]= meshgrid(grid.Long(iax),grid.Lat(iay));
+[LONGQ,LATQ]= meshgrid(frameLong,frameLat);
 
 % Read raster and projection information
-[LOSproj,R]= readgeoraster(filename);
+[LOSproj,R]= readgeoraster(losfilename);
 LOSproj= 1000*LOSproj; % Convert from m to mm
 LOSproj(LOSproj == 0)= nan; % Missing data -> NaN
 
@@ -31,7 +31,17 @@ y= flip(R.YWorldLimits(1):R.SampleSpacingInWorldY:R.YWorldLimits(2));
 [XQ,YQ]= projfwd(R.ProjectedCRS,LATQ,LONGQ);
 
 % Interpolate LOS
-LOSdisplacement= nan(grid.Size,'single');
-LOSdisplacement(iay,iax)= interp2(x,y,LOSproj,XQ,YQ,'nearest');
+LOSdisplacement= interp2(x,y,LOSproj,XQ,YQ,'nearest');
+
+
+% Interferogram mask -- land pixels within the interferogram frame
+outside= zeros(size(LOSdisplacement));
+CC= bwconncomp(isnan(LOSdisplacement));
+[~,I]= max(cellfun(@length,CC.PixelIdxList));
+pixlist= cell2mat(CC.PixelIdxList(I));
+outside(pixlist)= 1;
+
+mask= ~outside;
+
 
 end

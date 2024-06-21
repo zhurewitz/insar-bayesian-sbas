@@ -1,3 +1,4 @@
+%% Determine Processing Center from Filenames
 
 function processingCenter= determineProcessingCenter(filelist)
 

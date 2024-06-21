@@ -1,7 +1,10 @@
 %% Stitch Interferograms
 
-function [infLong,infLat,interferogram,coherence,mask,metaData]=...
-    stitchInterferograms2(filelist)
+function [infLong,infLat,interferogram,mask]=...
+    stitchInterferograms2(filelist, grid)
+
+dL= grid.dL;
+
 
 filelist= string(filelist);
 
@@ -10,16 +13,15 @@ Nframes= length(filelist);
 % Load metadata
 frameTable= table;
 for i= 1:Nframes
-    frameTable(i,:)= io.aria.readMetaData(filelist(i));
+    frameTable(i,:)= io.shortMetaData(filelist(i));
     
     Mission= string(frameTable.Mission);
     
-    % Check mission, track, and primary and secondary date compatibility
+    % Check processing center, mission, track, and primary and secondary date compatibility
     if i > 1
-        % frameTable.Mission(1:i-1)
-        % ~strcmpi(frameTable.Mission(1:i-1),frameTable.Mission(i))
-        % frameTable.Track(1:i-1)
-        % frameTable.Track(1:i-1) ~= frameTable.Track(i)
+        if any(~strcmpi(ProcessingCenter(1:i-1),ProcessingCenter(i)))
+            error('To stitch interferograms, all frames must be processed by the same processing center')
+        end
         if any(~strcmpi(Mission(1:i-1),Mission(i)) | frameTable.Track(1:i-1) ~= frameTable.Track(i))
             error('To stitch interferograms, all frames must be from the same mission and track')
         end
@@ -30,15 +32,18 @@ for i= 1:Nframes
 end
 
 
+% Read bounding boxes
+boundingBoxes= nan(Nframes,4);
+for i= 1:Nframes
+    boundingBoxes(i,:)= io.readBoundingBox(filelist(i));
+end
 
 % Sort interferograms going upwards in latitude
-[~,I]= sort(frameTable.BoundingBox(:,3));
+[~,I]= sort(boundingBoxes(:,3));
 frameTable= frameTable(I,:);
 
 % Image bounding box (union of all frame bounding boxes)
 boundingBox= [-1 1 -1 1].*max(frameTable.BoundingBox.*[-1 1 -1 1],[],1);
-
-dL= 1/1200;
 
 infLong= boundingBox(1):dL:boundingBox(2)+dL;
 infLat= boundingBox(3):dL:boundingBox(4)+dL;
@@ -87,12 +92,6 @@ for j= 1:Nframes
     coherence(tmpMask)= tmpCoherence(tmpMask);
     mask= mask | tmpMask;
 end
-
-metaData= utils.keepTableVariables(frameTable(1,:),{'Mission','Band',...
-    'Track','Direction','PrimaryDate','SecondaryDate','TemporalBaseline',...
-    'SpatialBaseline','Wavelength_mm'});
-metaData.Direction= metaData.Direction(:,1); % Convert direction to short form (A/D)
-metaData.BoundingBox= boundingBox;
 
 end
 
