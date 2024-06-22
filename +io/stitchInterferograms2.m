@@ -1,9 +1,9 @@
 %% Stitch Interferograms
 
 function [infLong,infLat,interferogram,mask]=...
-    stitchInterferograms2(filelist, grid)
+    stitchInterferograms2(filelist)
 
-dL= grid.dL;
+ dL= 1/1200;
 
 
 filelist= string(filelist);
@@ -19,7 +19,7 @@ for i= 1:Nframes
     
     % Check processing center, mission, track, and primary and secondary date compatibility
     if i > 1
-        if any(~strcmpi(ProcessingCenter(1:i-1),ProcessingCenter(i)))
+        if any(~strcmpi(frameTable.ProcessingCenter(1:i-1),frameTable.ProcessingCenter(i)))
             error('To stitch interferograms, all frames must be processed by the same processing center')
         end
         if any(~strcmpi(Mission(1:i-1),Mission(i)) | frameTable.Track(1:i-1) ~= frameTable.Track(i))
@@ -43,14 +43,13 @@ end
 frameTable= frameTable(I,:);
 
 % Image bounding box (union of all frame bounding boxes)
-boundingBox= [-1 1 -1 1].*max(frameTable.BoundingBox.*[-1 1 -1 1],[],1);
+boundingBox= [-1 1 -1 1].*max(boundingBoxes.*[-1 1 -1 1],[],1);
 
 infLong= boundingBox(1):dL:boundingBox(2)+dL;
 infLat= boundingBox(3):dL:boundingBox(4)+dL;
 imSize= [length(infLat) length(infLong)];
 
 interferogram= nan(imSize,'single');
-coherence= nan(imSize,'single');
 mask= false(imSize);
 
 [LONG,~]= meshgrid(infLong,infLat);
@@ -60,20 +59,18 @@ for j= 1:Nframes
     filename= frameTable.Fullname(j);
     
     % Read interferogram
-    [frameLOS,frameLat,frameLong,~,~,frameCoherence,~]=...
-        io.aria.readLOSdisplacement(filename);
+    [frameLOS,frameLat,frameLong]=...
+        io.readLOSdisplacement(filename);
     
     [Ilong,Ilat]= insertionIndices(infLong,infLat,frameLong,frameLat,dL);
 
     tmpLOS= nan(imSize,'single');
-    tmpCoherence= nan(imSize,'single');
     tmpMask= false(imSize);
 
     tmpLOS(Ilat,Ilong)= flip(frameLOS);
-    tmpCoherence(Ilat,Ilong)= flip(frameCoherence);
     tmpMask(Ilat,Ilong)= flip(~isnan(frameLOS));
 
-    OVERLAP= mask & tmpMask & tmpCoherence > 0.9;
+    OVERLAP= mask & tmpMask;
     
     correction= zeros(imSize);
     if any(OVERLAP,'all')
@@ -89,7 +86,6 @@ for j= 1:Nframes
     end
 
     interferogram(tmpMask)= tmpLOS(tmpMask)+ correction(tmpMask);
-    coherence(tmpMask)= tmpCoherence(tmpMask);
     mask= mask | tmpMask;
 end
 
