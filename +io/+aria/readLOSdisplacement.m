@@ -1,6 +1,6 @@
 %% Interferogram LOS Displacement -- ARIA Format
 
-function [LOSdisplacement,frameLat,frameLong,mask]=...
+function [LOSdisplacement,frameLat,frameLong]=...
     readLOSdisplacement(filename)
 
 % Meta data
@@ -38,15 +38,5 @@ LOSdisplacement= wavelength/(4*pi)* unwrappedPhase;
 
 % Mask by coherence value
 LOSdisplacement(connComp ~= mode(connComp,'all') | coherence < .5)= nan;
-
-
-% Interferogram mask -- land pixels within the interferogram frame
-outside= zeros(size(LOSdisplacement));
-CC= bwconncomp(isnan(LOSdisplacement));
-[~,I]= max(cellfun(@length,CC.PixelIdxList));
-pixlist= cell2mat(CC.PixelIdxList(I));
-outside(pixlist)= 1;
-
-mask= ~outside;
 
 end

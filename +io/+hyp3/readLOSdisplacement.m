@@ -1,6 +1,6 @@
 %% Read Line-of-Sight Displacement -- HyP3 Format
 
-function [LOSdisplacement,frameLat,frameLong,mask]= ...
+function [LOSdisplacement,frameLat,frameLong]= ...
     readLOSdisplacement(filename)
 
 dL= 1/1200;
@@ -32,16 +32,6 @@ y= flip(R.YWorldLimits(1):R.SampleSpacingInWorldY:R.YWorldLimits(2));
 
 % Interpolate LOS
 LOSdisplacement= interp2(x,y,LOSproj,XQ,YQ,'nearest');
-
-
-% Interferogram mask -- land pixels within the interferogram frame
-outside= zeros(size(LOSdisplacement));
-CC= bwconncomp(isnan(LOSdisplacement));
-[~,I]= max(cellfun(@length,CC.PixelIdxList));
-pixlist= cell2mat(CC.PixelIdxList(I));
-outside(pixlist)= 1;
-
-mask= ~outside;
 
 
 end
