@@ -83,6 +83,4 @@ You will need to provide:
 
 * The vertices of a polygon demarking the your [reference area](guides/referenceArea.md).
 
-* The vertices of a polygon demarking the coastline. 
-
 * Your OpenTopography API key.
