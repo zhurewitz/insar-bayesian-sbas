@@ -59,7 +59,7 @@ for k= 1:length(datadirs)
     end
 
     % List interfograms in directory
-    [~,filelist]= io.aria.listDirectory(datadir);
+    [~,filelist]= io.listDirectory(datadir);
 
     % Import interferograms
     flow.importInterferogramFrames(L1filename,filelist);
