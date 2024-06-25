@@ -11,6 +11,8 @@ Ninf= length(filelist);
 % Parse filename
 S= reshape(split(name,'-'),[],12);
 
+metaData.ProcessingCenter= repmat("ARIA",length(filelist),1);
+
 % Mission
 metaData.Mission= string(S(:,1));
 

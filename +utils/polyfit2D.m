@@ -2,7 +2,13 @@
 
 function p= polyfit2D(x,y,Z,order)
 
-[X,Y]= meshgrid(x,y);
+if isvector(x) && isvector(y)
+    [X,Y]= meshgrid(x,y);
+else
+    X= x;
+    Y= y;
+end
+
 X= reshape(X,[],1);
 Y= reshape(Y,[],1);
 

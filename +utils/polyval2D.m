@@ -2,17 +2,24 @@
 
 function Z= polyval2D(p,x,y)
 
+if isvector(x) && isvector(y)
+    SIZE= [length(y) length(x)];
+    N= prod(SIZE);
+
+    [X,Y]= meshgrid(x,y);
+else
+    X= x;
+    Y= y;
+    N= numel(X);
+    SIZE= size(X);
+end
+
+X= reshape(X,1,1,N);
+Y= reshape(Y,1,1,N);
+
 % Invert order from triangular number formula + quadratic formula where the
 % triangular number is the length of the polynomial parameter vector
 order= round(-1.5+ .5*sqrt(8*length(p)+1));
-
-
-SIZE= [length(y) length(x)];
-N= prod(SIZE);
-
-[X,Y]= meshgrid(x,y);
-X= reshape(X,1,1,N);
-Y= reshape(Y,1,1,N);
 
 A= zeros(N,length(p));
 k= 0;
