@@ -5,6 +5,7 @@ function generateOceanMask(workdir,h5filename)
 % Read grid from h5 file
 commonGrid= h5.readGrid(h5filename,'/grid');
 
+wvsname= "World Vector Shoreline";
 
 wvsdir= fullfile(workdir,wvsname);
 zipname= fullfile(workdir,strcat(wvsname,'.zip'));
@@ -12,7 +13,7 @@ zipname= fullfile(workdir,strcat(wvsname,'.zip'));
 if ~exist(zipname,'file') && ~exist(wvsdir,'dir')
     fprintf('Downloading World Vector Shoreline (WVS)...\n')
     websave(zipname,...
-        'http://www.soest.hawaii.edu/pwessel/gshhg/gshhg-bin-2.3.7.zip')
+        'http://www.soest.hawaii.edu/pwessel/gshhg/gshhg-bin-2.3.7.zip');
     fprintf('Download complete.\n')
 end
 
