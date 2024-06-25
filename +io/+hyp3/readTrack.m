@@ -4,7 +4,14 @@ function [Track,Direction]= readTrack(dir,name)
 
 filename= fullfile(dir,name,strcat(name,'.txt'));
 
-S= readlines(filename);
+try
+    S= readlines(filename);
+catch
+    warning('Track could not be read from file %s',filename)
+    Track= nan;
+    Direction= "";
+    return
+end
 
 I= contains(S,'Reference Granule: ');
 referenceGranualeName= extractAfter(S(I),'Reference Granule: ');

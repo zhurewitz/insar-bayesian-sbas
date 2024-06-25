@@ -1,4 +1,4 @@
-%% Incidence and Azimuth Angles and Look Vector
+%% ARIA - Look Angles and Vector
 % By convention, the look vector is upwards-oriented and points TOWARDS the
 % satellite
 
