@@ -17,9 +17,6 @@ workdir= "/full/path/to/work/directory/";
 % Reference area polygon
 % *Load vectors referenceLongitude and referenceLatitude
 
-% Coastline polygon
-% *Load vectors coastlineLongitude and coastlineLatitude
-
 % OpenTopography API key
 APIkey= "my11111API22222key33333";
 
@@ -38,7 +35,7 @@ end
 
 % Grid metadata
 flow.generateGrid(L1filename,LongLim,LatLim,referenceLongitude,...
-    referenceLatitude, coastlineLongitude,coastlineLatitude);
+    referenceLatitude);
 flow.generateGrid(L2filename,LongLim,LatLim);
 flow.generateGrid(L3filename,LongLim,LatLim);
 
@@ -46,6 +43,9 @@ flow.generateGrid(L3filename,LongLim,LatLim);
 if ~isempty(APIkey)
     io.importElevation([L1filename,L2filename,L3filename],APIkey)
 end
+
+% Generate ocean mask from World Vector Shoreline data
+io.generateOceanMask(workdir,L1filename);
 
 
 
