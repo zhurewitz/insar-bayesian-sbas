@@ -1,7 +1,7 @@
 %% Generate Grid Information
 
 function generateGrid(h5filename,LongLim,LatLim,...
-    referenceLongitude,referenceLatitude,coastlineLongitude,coastlineLatitude)
+    referenceLongitude,referenceLatitude)
 
 arguments
     h5filename
@@ -9,8 +9,6 @@ arguments
     LatLim
     referenceLongitude= [];
     referenceLatitude= [];
-    coastlineLongitude= [];
-    coastlineLatitude= [];
 end
 
 savedir= fileparts(h5filename);
@@ -19,7 +17,6 @@ if ~exist(savedir,'dir')
 end
 
 calculateReference= ~isempty(referenceLongitude);
-calculateOceanMask= ~isempty(coastlineLongitude);
 
 
 % Native interferogram grid increment
@@ -36,7 +33,7 @@ metaGrid= utils.createGrid(metaLatLim,metaLongLim,dLmeta,true);
 
 
 
-%% Detrending Matrices and Ocean Mask
+%% Detrending Matrices
 
 if calculateReference
     IN= inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,referenceLongitude,referenceLatitude);
@@ -68,22 +65,12 @@ if calculateReference
 end
 
 
-% Ocean Mask
-if calculateOceanMask
-    OCEAN= ~inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,coastlineLongitude,coastlineLatitude);
-end
-
-
 
 %% Write to HDF5 File
 
 path= '/grid/';
 h5.writeGrid(h5filename,path,commonGrid)
 
-if calculateOceanMask
-    h5.write(h5filename,path,'oceanMask',uint8(OCEAN),'Datatype','uint8',...
-        'ChunkSize',[600 600],'Deflate',9,'Shuffle',true,'Fletcher32',true)
-end
 if calculateReference
     h5.write(h5filename,path,'referenceMask',uint8(IN),'Datatype','uint8',...
         'ChunkSize',[600 600],'Deflate',9,'Shuffle',true,'Fletcher32',true)
