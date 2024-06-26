@@ -146,7 +146,7 @@ for m= 1:length(Missions)
             path= fullfile(basename,trackstr);
             
             if k == 1
-                [AZ,INC,LOOK,LX,LY,LZ]= io.stitchAngles(stitchNames,metaGrid);
+                [AZ,INC,LX,LY,LZ]= io.stitchAngles(stitchNames,metaGrid);
                 LOOKVECTOR= cat(3,LX,LY,LZ);
                 
                 h5.write(h5filename,path,'incidenceAngle',INC);
