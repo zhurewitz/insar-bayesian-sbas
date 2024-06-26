@@ -152,10 +152,7 @@ for m= 1:length(Missions)
                 h5.write(h5filename,path,'incidenceAngle',INC);
                 h5.writeatts(h5filename,path,'incidenceAngle',...
                     'units','degrees','referenceDirection','up');
-                
-                h5.write(h5filename,path,'lookAngle',LOOK);
-                h5.writeatts(h5filename,path,'lookAngle','units','degrees');
-                
+ 
                 h5.write(h5filename,path,'azimuthAngle',AZ);
                 h5.writeatts(h5filename,path,'azimuthAngle',...
                     'units','degrees','origin','ground','pointsTo',...
