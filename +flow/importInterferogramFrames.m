@@ -6,7 +6,7 @@ function importInterferogramFrames(h5filename,filelist,varargin)
 % Maximum number of interferometric pairs to process
 % For instance, to save a reduced size file clone, run:
 % importInterferogramFrames(h5filename,filelist,'MaxPairs',2)
-maxPairs= parseIn(varargin,'MaxPairs');
+maxPairs= utils.parseIn(varargin,'MaxPairs');
 if isempty(maxPairs)
     maxPairs= Inf;
 end
