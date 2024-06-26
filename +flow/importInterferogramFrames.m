@@ -35,7 +35,7 @@ IN= h5.read(h5filename,'/grid','referenceMask') == 1;
 
 %% Read File Metadata, Remove Long-Baseline Interferograms
 
-frameTable= io.aria.shortMetaData2(filelist);
+frameTable= io.shortMetaData(filelist);
 
 % Remove long temporal baseline interferograms for optimal windowing
 Ikeep= (frameTable.SecondaryDate < datetime(2018,10,1) & frameTable.TemporalBaseline < 200) |...
