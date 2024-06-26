@@ -34,6 +34,9 @@ metaData.TemporalBaseline= days(diff(dates,1,2));
 % Time direction
 metaData.TimeForward= timeForward;
 
+% Version number
+metaData.Version= S(:,12);
+
 % Filenames
 metaData.Filename= strcat(name,ext);
 metaData.Fullname= filelist;

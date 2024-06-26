@@ -57,7 +57,7 @@ Interferograms in NISAR format are archived and can be downloaded from the Alask
 
     4. Select update. Note down all the interferogram paths/tracks which intersect the bounding box with significant overlap. 
 
-3. Copy the `dataDownload_template.m` script to your project directory and rename as desired. In MATLAB, fill it out and run. 
+3. Copy the `dataDownload_template.m` (PLANNED) script to your project directory and rename as desired. In MATLAB, fill it out and run. 
 
     You will need to provide:
 
