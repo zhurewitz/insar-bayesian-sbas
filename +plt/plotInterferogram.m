@@ -6,7 +6,7 @@ function [h,illuminationImage]= plotInterferogram( ...
 
 arguments
     h5filename
-    Flag {mustBeMember(Flag,{"L1"})}
+    Flag {mustBeMember(Flag,["L1","L2"])}
     Mission
     Track
     PrimaryDate

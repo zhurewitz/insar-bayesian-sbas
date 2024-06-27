@@ -6,7 +6,7 @@ function [Stack,grid,PrimaryDate,SecondaryDate]= loadStack(...
 
 arguments
     h5filename
-    Flag {mustBeMember(Flag,{"L1","L2"})}
+    Flag {mustBeMember(Flag,["L1","L2"])}
     Mission
     Track
     PrimaryDate= [];
