@@ -35,7 +35,7 @@ IN= h5.read(h5filename,'/grid','referenceMask') == 1;
 
 %% Read File Metadata, Remove Long-Baseline Interferograms
 
-frameTable= io.aria.shortMetaData2(filelist);
+frameTable= io.shortMetaData(filelist);
 
 % Remove long temporal baseline interferograms for optimal windowing
 Ikeep= (frameTable.SecondaryDate < datetime(2018,10,1) & frameTable.TemporalBaseline < 200) |...
@@ -146,16 +146,13 @@ for m= 1:length(Missions)
             path= fullfile(basename,trackstr);
             
             if k == 1
-                [AZ,INC,LOOK,LX,LY,LZ]= io.stitchAngles(stitchNames,metaGrid);
+                [AZ,INC,LX,LY,LZ]= io.stitchAngles(stitchNames,metaGrid);
                 LOOKVECTOR= cat(3,LX,LY,LZ);
                 
                 h5.write(h5filename,path,'incidenceAngle',INC);
                 h5.writeatts(h5filename,path,'incidenceAngle',...
                     'units','degrees','referenceDirection','up');
-                
-                h5.write(h5filename,path,'lookAngle',LOOK);
-                h5.writeatts(h5filename,path,'lookAngle','units','degrees');
-                
+ 
                 h5.write(h5filename,path,'azimuthAngle',AZ);
                 h5.writeatts(h5filename,path,'azimuthAngle',...
                     'units','degrees','origin','ground','pointsTo',...

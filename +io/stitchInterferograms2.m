@@ -44,6 +44,7 @@ frameTable= frameTable(I,:);
 
 % Image bounding box (union of all frame bounding boxes)
 boundingBox= [-1 1 -1 1].*max(boundingBoxes.*[-1 1 -1 1],[],1);
+boundingBox = boundingBox + .1*[-1 1 -1 1]; % Bug fix for hyp3 misalignment
 
 infLong= boundingBox(1):dL:boundingBox(2)+dL;
 infLat= boundingBox(3):dL:boundingBox(4)+dL;
