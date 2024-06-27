@@ -16,30 +16,18 @@
 
     <img src="images/directoryStructure.png" width=200>
 
-1. Clone this repository and the [`matlab-fast-geometry`](https://github.com/zhurewitz/matlab-fast-geometry) library into the `Libraries` directory.  
-
-    1. Open the Terminal application (in Utilities, inside the Applications folder).
+1. Clone this repository and the [`matlab-fast-geometry`](https://github.com/zhurewitz/matlab-fast-geometry) library into the `Libraries` directory. Github Desktop is recommended for users unfamiliar with command line. The download URLs are:
     
-    2. Navigate to the `Libraries` directory using the `cd` command. Use the top bar (red circle) in the image in step 1 to make the path. For the above example the command would be:
+    1. `https://github.com/zhurewitz/insar-bayesian-sbas.git`
+    2. `https://github.com/zhurewitz/matlab-fast-geometry.git`
 
-        ```
-        cd /Users/zhurewit/Desktop/Tutorial/MATLAB/Libraries
-        ```
+    Your directory structure should now look like:
 
-    2. Run the following commands:
+    <img src="images/cloned.png" width=300>
 
-        ```
-        git clone https://github.com/zhurewitz/insar-bayesian-sbas.git
-        git clone https://github.com/zhurewitz/matlab-fast-geometry.git
-        ```
+1. At the top of the screen in the `Home` tab, click the `Set Path` button as shown. Add both libraries to your path and save
 
-    3. Your directory structure should now look like:
-
-        <img src="images/cloned.png" width=300>
-
-1. Right click on the `Libraries` folder and add selected folders and subfolders to the working path as shown below.
-
-    <img src="images/addToPath.png" width=500>
+    <img src="images/setPath.png" width=500>
 
     The directories and files which have been added to the path are now highlighted, while those not on the path remain faded.
 
