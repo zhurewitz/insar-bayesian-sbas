@@ -5,7 +5,7 @@ function [Page,Grid,PrimaryDate,SecondaryDate]= loadPage(...
 
 arguments
     h5filename
-    Flag {mustBeMember(Flag,{"L1","L2","closureMask","L3"})}
+    Flag {mustBeMember(Flag,["L1","L2","closureMask","L3"])}
     Mission
     Track
     k= 1;
@@ -50,7 +50,7 @@ trackstr= strcat(Mission,'-',string(Track));
 path= fullfile(basepath,trackstr);
 
 % Read from HDF5 file
-Page= h5.readPage(filename,path,name,k);
+Page= h5.readPage(h5filename,path,name,k);
 
 end
 
