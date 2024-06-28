@@ -64,7 +64,7 @@ if drawElevation
 else
     backgroundColor= .8;
 end
-interferogramImage= plt.toColorSimple(Stack,single(colormap2('redblue')),RANGE,backgroundColor);
+interferogramImage= plt.toColorSimple(Stack,single(plt.colormap2('redblue')),RANGE,backgroundColor);
 
 C= addLayer(illuminationImage,interferogramImage,.8);
 
