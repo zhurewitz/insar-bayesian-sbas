@@ -67,8 +67,15 @@ end
 trackstr= strcat(Mission,'-',string(Track));
 path= fullfile(basepath,trackstr);
 
-[~,iax,~]= intersect(commonGrid.LongLim(1),grid.LongLim(1));
-[~,iay,~]= intersect(commonGrid.LatLim(1),grid.LatLim(1));
+dL= commonGrid.dL;
+
+[~,iax,~]= intersect(round(commonGrid.Long/dL),round(grid.LongLim(1)/dL));
+[~,iay,~]= intersect(round(commonGrid.Lat/dL),round(grid.LatLim(1)/dL));
+
+if isempty(iax) || isempty(iay)
+    Stack= [];
+    return
+end
 
 
 [PrimaryDateFile,SecondaryDateFile]= io.loadDates(h5filename,Flag,Mission,Track);

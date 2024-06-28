@@ -9,7 +9,7 @@ arguments
     k= 1;
 end
 
-S= h5info(L1filename,fullfile(path,name));
+S= h5info(filename,fullfile(path,name));
 
 Size= S.Dataspace.Size;
 
