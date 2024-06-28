@@ -24,7 +24,7 @@ switch ext
         % Delete the temporary files
         delete(zipfilename)
         delete(kmlfilename)
-        rmdir(tmdir)
+        rmdir(tmpdir)
 
     case '.kml'
         % Read the .kml file
