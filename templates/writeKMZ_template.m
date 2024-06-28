@@ -33,7 +33,7 @@ Page= io.loadPage(h5filename,Flag,Mission,Track,k);
 
 RANGE= [-100 100];
 backgroundColor= 0;
-cmap= colormap2('redblue');
+cmap= plt.colormap2('redblue');
 interferogramImage= plt.toColorSimple(Page,single(cmap),RANGE,backgroundColor);
 
 mask= .8*(~isnan(Page))+ .2;
