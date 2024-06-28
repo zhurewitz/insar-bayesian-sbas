@@ -17,7 +17,7 @@ The reference area can be chosen in many ways, corresponding to the needs of the
 
 Multiple avenues from within the BInSAR library are available to create and import the reference polygon:
 
-1. To manually select a polygon of the reference area in Google Earth Pro, follow the `referenceFromGoogleEarth.m` workflow (PLANNED).
+1. To manually select a polygon of the reference area in Google Earth Pro, follow the [`referenceFromGoogleEarth.m`](../templates/referenceFromGoogleEarth.mlx) workflow.
 
 2. To import a polygon from a CSV, follow the `referenceFromCSV.m` workflow (PLANNED).
 
