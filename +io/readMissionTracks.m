@@ -21,8 +21,12 @@ S= h5info(filename,path);
 
 A= split(Names,'-');
 
-Missions= unique(A(:,1));
-
-Tracks= unique(str2double(A(:,2)));
+if isvector(A)
+    Missions= A(1);
+    Tracks= str2double(A(2));
+else
+    Missions= unique(A(:,1));
+    Tracks= unique(str2double(A(:,2)));
+end
 
 end
