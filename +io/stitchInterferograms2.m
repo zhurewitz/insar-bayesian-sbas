@@ -68,8 +68,8 @@ for j= 1:Nframes
     tmpLOS= nan(imSize,'single');
     tmpMask= false(imSize);
 
-    tmpLOS(Ilat,Ilong)= flip(frameLOS);
-    tmpMask(Ilat,Ilong)= flip(~isnan(frameLOS));
+    tmpLOS(Ilat,Ilong)= frameLOS;
+    tmpMask(Ilat,Ilong)= ~isnan(frameLOS);
 
     OVERLAP= mask & tmpMask;
     
