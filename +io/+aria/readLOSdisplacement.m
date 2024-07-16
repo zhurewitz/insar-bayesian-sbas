@@ -39,4 +39,8 @@ LOSdisplacement= wavelength/(4*pi)* unwrappedPhase;
 % Mask by coherence value
 LOSdisplacement(connComp ~= mode(connComp,'all') | coherence < .5)= nan;
 
+% Flip to orient upwards
+frameLat= flip(frameLat);
+LOSdisplacement= flip(LOSdisplacement);
+
 end
