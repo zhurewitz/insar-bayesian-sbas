@@ -6,7 +6,7 @@ function [Stack,grid,PrimaryDate,SecondaryDate]= loadStack(...
 
 arguments
     h5filename
-    Flag {mustBeMember(Flag,["L1","L2"])}
+    Flag {mustBeMember(Flag,["L1","L2","L3"])}
     Mission
     Track
     PrimaryDate= [];
@@ -60,6 +60,8 @@ switch Flag
         basepath= '/interferogram/L1-stitched';
     case "L2"
         basepath= '/interferogram/L2-closureCorrected';
+    case "L3"
+        basepath= '/timeseries/L3-displacement';
     otherwise
         error('Level flag not supported')
 end
