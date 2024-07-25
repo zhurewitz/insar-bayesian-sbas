@@ -96,9 +96,7 @@ for m= 1:length(Missions)
             stitchNames= subTable.Fullname(subTable.PrimaryDate == primaryDate(k) & subTable.SecondaryDate == secondaryDate(k),:);
             
             % Load and stich interferograms
-            [infLong,infLat,displacementLOS]= io.stitchInterferograms2(stitchNames);
-            % [infLong,infLat,displacementLOS,coherence,mask,metaData]=...
-            %     io.stitchInterferograms2(stitchNames);
+            [infLong,infLat,displacementLOS, coherence, connComp]= io.stitchInterferograms2(stitchNames);
             
             
             
@@ -114,8 +112,19 @@ for m= 1:length(Missions)
                 
                 LOS= nan(commonGrid.Size,'single');
                 LOS(ia_lat,ia_long)= displacementLOS(ib_lat,ib_long);
-
                 LOS(OCEAN)= nan;
+                
+                COH= nan(commonGrid.Size,'single');
+                COH(ia_lat,ia_long)= coherence(ib_lat,ib_long);
+                COH(OCEAN)= nan;
+                
+                if ~isempty(connComp)
+                    CON= nan(commonGrid.Size,'single');
+                    CON(ia_lat,ia_long)= connComp(ib_lat,ib_long);
+                    CON(OCEAN)= nan;
+                else
+                    CON= [];
+                end
             else
                 fprintf('Stitched interferogram %d/%d does not intersect. Elapsed time %0.0fs\n',...
                     k,Npairs,toc-t1)
