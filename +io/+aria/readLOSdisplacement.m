@@ -1,6 +1,6 @@
 %% Interferogram LOS Displacement -- ARIA Format
 
-function [LOSdisplacement,frameLat,frameLong]=...
+function [LOSdisplacement,frameLat,frameLong,connComp,coherence]=...
     readLOSdisplacement(filename)
 
 % Meta data
@@ -17,7 +17,9 @@ end
 [frameLat,frameLong]= io.aria.readLatLong(filename);
 
 coherence= io.aria.readCoherence(filename);
+coherence= flip(coherence);
 connComp= io.aria.readConnectedComponents(filename);
+connComp= flip(connComp);
 
 % Radar Wavelength (mm)
 switch metaData.Mission
@@ -34,10 +36,6 @@ LOSdisplacement= wavelength/(4*pi)* unwrappedPhase;
 
 % Source:
 % https://asf.alaska.edu/how-to/data-recipes/interpreting-an-unwrapped-interferogram-creating-a-deformation-map/
-
-
-% Mask by coherence value
-LOSdisplacement(connComp ~= mode(connComp,'all') | coherence < .5)= nan;
 
 % Flip to orient upwards
 frameLat= flip(frameLat);
