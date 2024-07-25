@@ -138,7 +138,7 @@ for m= 1:length(Missions)
             % with elevation.
             
             I= ~isnan(LOS) & Elevation > 0;
-            [p,~,mu]= polyfit(Elevation(I),LOS(I));
+            [p,~,mu]= polyfit(Elevation(I),LOS(I),1);
             correction= polyval(p,Elevation,[],mu);
             LOS= LOS- correction;
             

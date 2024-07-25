@@ -21,6 +21,8 @@ coherence= flip(coherence);
 connComp= io.aria.readConnectedComponents(filename);
 connComp= flip(connComp);
 
+connComp= connComp ~= mode(connComp);
+
 % Radar Wavelength (mm)
 switch metaData.Mission
     case "S1"
