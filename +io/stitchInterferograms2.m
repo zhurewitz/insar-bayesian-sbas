@@ -1,6 +1,6 @@
 %% Stitch Interferograms
 
-function [infLong,infLat,interferogram,missingMask]=...
+function [infLong,infLat,interferogram,coherence,connComp,missingMask]=...
     stitchInterferograms2(filelist)
 
  dL= 1/1200;
@@ -51,6 +51,8 @@ infLat= boundingBox(3):dL:boundingBox(4)+dL;
 imSize= [length(infLat) length(infLong)];
 
 interferogram= nan(imSize,'single');
+coherence= nan(imSize,'single');
+connComp= [];
 missingMask= false(imSize);
 
 [LONG,~]= meshgrid(infLong,infLat);
@@ -60,15 +62,25 @@ for j= 1:Nframes
     filename= frameTable.Fullname(j);
     
     % Read interferogram
-    [frameLOS,frameLat,frameLong,coherence,connComp]=...
+    [frameLOS,frameLat,frameLong,frameCoherence,frameConnComp]=...
         io.readLOSdisplacement(filename);
     
     [Ilong,Ilat]= insertionIndices(infLong,infLat,frameLong,frameLat,dL);
 
     tmpLOS= nan(imSize,'single');
+    tmpCOH= nan(imSize,'single');
+    if ~isempty(frameConnComp)
+        tmpConn= nan(imSize,'single');
+    else
+        tmpConn= [];
+    end
     tmpMask= false(imSize);
 
     tmpLOS(Ilat,Ilong)= frameLOS;
+    tmpCOH(Ilat,Ilong)= frameCoherence;
+    if ~isempty(frameConnComp)
+        tmpConn(Ilat,Ilong)= frameConnComp;
+    end
     tmpMask(Ilat,Ilong)= ~isnan(frameLOS);
 
     OVERLAP= missingMask & tmpMask;
@@ -87,6 +99,13 @@ for j= 1:Nframes
     end
 
     interferogram(tmpMask)= tmpLOS(tmpMask)+ correction(tmpMask);
+    coherence(tmpMask)= tmpCOH(tmpMask);
+    if ~isempty(tmpConn)
+        if isempty(connComp)
+            connComp= nan(imSize,'single');
+        end
+        connComp(tmpMask)= tmpConn(tmpMask); %#ok<AGROW>
+    end
     missingMask= missingMask | tmpMask;
 end
 
