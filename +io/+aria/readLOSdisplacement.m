@@ -1,6 +1,6 @@
 %% Interferogram LOS Displacement -- ARIA Format
 
-function [LOSdisplacement,frameLat,frameLong,connComp,coherence]=...
+function [LOSdisplacement,frameLat,frameLong,coherence,connComp]=...
     readLOSdisplacement(filename)
 
 % Meta data
