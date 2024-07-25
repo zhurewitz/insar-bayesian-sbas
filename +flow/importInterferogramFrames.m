@@ -119,7 +119,7 @@ for m= 1:length(Missions)
                 COH(OCEAN)= nan;
                 
                 if ~isempty(connComp)
-                    CON= false(commonGrid.Size,'single');
+                    CON= false(commonGrid.Size);
                     CON(ia_lat,ia_long)= connComp(ib_lat,ib_long);
                     CON(OCEAN)= false;
                 else

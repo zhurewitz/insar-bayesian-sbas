@@ -102,7 +102,7 @@ for j= 1:Nframes
     coherence(tmpMask)= tmpCOH(tmpMask);
     if ~isempty(tmpConn)
         if isempty(connComp)
-            connComp= false(imSize,'single');
+            connComp= false(imSize);
         end
         connComp(tmpMask)= connComp(tmpMask) | tmpConn(tmpMask); %#ok<AGROW>
     end
