@@ -187,7 +187,7 @@ for m= 1:length(Missions)
             %% Save Interferogram to HDF5 ProcessingStore File
             
             writeStitchedInterferogram(h5filename,mission,track,primaryDate(k),...
-                secondaryDate(k),LOS,trendMeta);
+                secondaryDate(k),LOS,trendMeta,COH,CON);
 
             fprintf('Mission %d/%d. Track %d/%d. Interferogram %d/%d saved. Elapsed time %0.1f min\n',...
                 m,length(Missions), t,length(Tracks), k,Npairs,(toc-t1)/60)
@@ -208,7 +208,7 @@ end
 %% Write L1 Stitched Interferogram to H5 Processing File
 
 function writeStitchedInterferogram(L1filename,Mission,Track,PrimaryDate,...
-    SecondaryDate,LOS,trendMeta)
+    SecondaryDate,LOS,trendMeta,COH,CON)
 
 basename= '/interferogram/L1-stitched/';
 trackstr= strcat(Mission,'-',string(Track));
@@ -242,6 +242,12 @@ h5.writeScalar(L1filename,path,'secondaryDate',SecondaryDate,Inf,k)
 
 h5.write2DInf(L1filename,path,'trendMeta',trendMeta,k,[size(trendMeta) 1])
 h5.writeatts(L1filename,path,'trendMeta','units','mm')
+
+% Write coherence and connComp
+h5.write2DInf(L1filename,path,'coherence',COH,k,[300 300 1],3)
+if ~isempty(CON)
+    h5.write2DInf(L1filename,path,'connComp',CON,k,[300 300 1],3)
+end
 
 
 end
