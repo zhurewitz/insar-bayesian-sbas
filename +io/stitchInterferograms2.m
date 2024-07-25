@@ -60,7 +60,7 @@ for j= 1:Nframes
     filename= frameTable.Fullname(j);
     
     % Read interferogram
-    [frameLOS,frameLat,frameLong]=...
+    [frameLOS,frameLat,frameLong,coherence,connComp]=...
         io.readLOSdisplacement(filename);
     
     [Ilong,Ilat]= insertionIndices(infLong,infLat,frameLong,frameLat,dL);
