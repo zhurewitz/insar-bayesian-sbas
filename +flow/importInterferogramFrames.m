@@ -29,7 +29,7 @@ commonTrendMatrix= h5.read(h5filename,'/grid','trendMatrix');
 metaTrendMatrix= h5.read(h5filename,'/metaGrid','trendMatrix');
 OCEAN= h5.read(h5filename,'/grid','oceanMask') == 1;
 IN= h5.read(h5filename,'/grid','referenceMask') == 1;
-
+Elevation= h5.read(h5filename,'/grid','elevation');
 
 
 
@@ -122,6 +122,16 @@ for m= 1:length(Missions)
                 continue
             end
 
+            
+            %% Detrend Interferogram by Elevation
+            % Stratified atmosphere can cause elevation-correlated signals
+            % in the interferograms. Correct by removing the linear trend
+            % with elevation.
+            
+            I= ~isnan(LOS) & Elevation > 0;
+            [p,~,mu]= polyfit(Elevation(I),LOS(I));
+            correction= polyval(p,Elevation,[],mu);
+            LOS= LOS- correction;
             
             
             %% Detrend Interferogram to Reference Area
