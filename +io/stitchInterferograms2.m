@@ -1,6 +1,6 @@
 %% Stitch Interferograms
 
-function [infLong,infLat,interferogram,mask]=...
+function [infLong,infLat,interferogram,missingMask]=...
     stitchInterferograms2(filelist)
 
  dL= 1/1200;
@@ -51,7 +51,7 @@ infLat= boundingBox(3):dL:boundingBox(4)+dL;
 imSize= [length(infLat) length(infLong)];
 
 interferogram= nan(imSize,'single');
-mask= false(imSize);
+missingMask= false(imSize);
 
 [LONG,~]= meshgrid(infLong,infLat);
 
@@ -71,7 +71,7 @@ for j= 1:Nframes
     tmpLOS(Ilat,Ilong)= frameLOS;
     tmpMask(Ilat,Ilong)= ~isnan(frameLOS);
 
-    OVERLAP= mask & tmpMask;
+    OVERLAP= missingMask & tmpMask;
     
     correction= zeros(imSize);
     if any(OVERLAP,'all')
@@ -87,7 +87,7 @@ for j= 1:Nframes
     end
 
     interferogram(tmpMask)= tmpLOS(tmpMask)+ correction(tmpMask);
-    mask= mask | tmpMask;
+    missingMask= missingMask | tmpMask;
 end
 
 end
