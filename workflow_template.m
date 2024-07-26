@@ -67,11 +67,9 @@ end
 
 
 
-%% Level-2 Processing -- Process Phase Closure Mask and Correct Interferograms
+%% Level-2 Processing -- Record Phase Closure
 
-flow.processClosureMask(L1filename,L2filename);
-
-flow.applyClosureCorrection(L1filename,L2filename);
+flow.recordClosure(L1filename,L2filename);
 
 
 
