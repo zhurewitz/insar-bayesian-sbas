@@ -75,5 +75,5 @@ flow.recordClosure(L1filename,L2filename);
 
 %% Level-3 Processing -- Estimate Displacement Timeseries
 
-flow.processDisplacementTimeseries(L2filename,L3filename)
+flow.processDisplacementTimeseries(L1filename,L3filename)
 
