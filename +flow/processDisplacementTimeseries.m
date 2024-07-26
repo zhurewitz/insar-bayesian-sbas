@@ -1,17 +1,17 @@
 %% Process Displacement Timeseries
 
-function processDisplacementTimeseries(L2filename,L3filename)
+function processDisplacementTimeseries(L1filename,L3filename)
 
 arguments
-    L2filename
+    L1filename
     L3filename= [];
 end
 
 if isempty(L3filename)
-    L3filename= L2filename;
+    L3filename= L1filename;
 end
 
-[Missions,Tracks]= io.readMissionTracks(L2filename,'L2');
+[Missions,Tracks]= io.readMissionTracks(L1filename,'L1');
 
 t2= utils.tictoc;
 for m= 1:length(Missions)
@@ -19,18 +19,18 @@ for m= 1:length(Missions)
     for t= 1:length(Tracks)
         Track= Tracks(t);
 
-        path= '/interferogram/L2-closureCorrected';
+        path= '/interferogram/L1-stitched';
         name= strcat(Mission,'-',string(Track));
-        if ~h5.exist(L2filename,path,name)
+        if ~h5.exist(L1filename,path,name)
             continue
         end
 
         Mission= Missions(m);
         Track= Tracks(t);
         
-        [PrimaryDate,SecondaryDate]= io.loadDates(L2filename,'L2',Mission,Track);
+        [PrimaryDate,SecondaryDate]= io.loadDates(L1filename,'L1',Mission,Track);
         
-        S= h5info(L2filename,fullfile('/interferogram/L2-closureCorrected/',name,'data'));
+        S= h5info(L1filename,fullfile('/interferogram/L1-stitched/',name,'data'));
         ChunkSize= S.ChunkSize;
         Size= S.Dataspace.MaxSize;
         
@@ -40,7 +40,7 @@ for m= 1:length(Missions)
         for ty= 1:NtilesY
             for tx= 1:NtilesX
                 % Load chunk stack
-                Stack= loadInterferogramStack(L2filename,Mission,Track,ChunkSize,tx,ty);
+                Stack= loadInterferogramStack(L1filename,Mission,Track,ChunkSize,tx,ty);
                 
                 if all(isnan(Stack),'all')
                     continue
@@ -69,16 +69,16 @@ end
 
 %% Load Stack of Interferograms
 
-function Stack= loadInterferogramStack(L2filename,Mission,Track,ChunkSize,tx,ty)
+function Stack= loadInterferogramStack(L1filename,Mission,Track,ChunkSize,tx,ty)
 
-basepath= '/interferogram/L2-closureCorrected';
+basepath= '/interferogram/L1-stitched';
 trackstr= strcat(Mission,'-',string(Track));
 path= fullfile(basepath,trackstr);
 
 start= [ChunkSize(1)*(ty-1)+1 ChunkSize(2)*(tx-1)+1 1];
 count= [ChunkSize(1:2) Inf];
 
-Stack= h5read(L2filename,fullfile(path,'data'),start,count);
+Stack= h5read(L1filename,fullfile(path,'data'),start,count);
 
 end
 
