@@ -1,6 +1,6 @@
 %% Estimate Displacement Timeseries
 
-function [Optimizer,Date,ReferenceDate,PosteriorCovarianceSqrt]= ...
+function [Optimizer,Date,ReferenceDate,PosteriorCovarianceSqrt,SBASTimeseries]= ...
     estimateDisplacementTimeseries(Stack,PrimaryDate,SecondaryDate)
 % Prepare Stack
 
@@ -33,7 +33,7 @@ flatStack= flatStack(:,Idata);
 
 
 
-%% Bayesian Setup
+%% Inversion Setup
 
 r_phase= 3.5; % mm
 % Numerical phase unwrapping noise. Estimated as the rms of the SBAS
@@ -73,7 +73,7 @@ G= double(PostingDate == Date');
 
 
 
-%% SBAS Inversion
+%% Bayesian SBAS Inversion
 
 Ninf= height(flatStack);
 Npostings= length(PostingDate);
@@ -101,12 +101,28 @@ B_x= (A/P_theta_inv)*A'+ B; % Prior covariance
 R_x= M*R_xi*M'+ R_eta; % Noise
 
 K= B_x*(M*G)'/((M*G)*B_x*(M*G)'+ R_x); % Kalman Gain
-OPTIMIZER= mu_x+ K*(y- (M*G)*mu_x); % Posterior mean
+OptimizerFlat= mu_x+ K*(y- (M*G)*mu_x); % Posterior mean
 
 % Unflatten
 DISPtmp= nan([prod(Size) Ndate]);
-DISPtmp(Idata,:)= OPTIMIZER';
+DISPtmp(Idata,:)= OptimizerFlat';
 Optimizer= reshape(DISPtmp,[Size Ndate]);
+
+
+
+
+%% Traditional SBAS Inversion
+
+timeseriesSBASPosting= M\y;
+
+% Interpolate to query times
+SBASFlat= interp1([ReferenceDate; PostingDate],[zeros(1,width(y)); timeseriesSBASPosting],Date);
+
+% Unflatten
+SBAStmp= nan([prod(Size) Ndate]);
+SBAStmp(Idata,:)= SBASFlat';
+SBASTimeseries= reshape(SBAStmp,[Size Ndate]);
+
 
 
 
