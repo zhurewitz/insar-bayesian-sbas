@@ -33,26 +33,19 @@ Elevation= h5.read(h5filename,'/grid','elevation');
 
 
 
-%% Read File Metadata, Remove Long-Baseline Interferograms
-
-frameTable= io.shortMetaData(filelist);
-
-% Remove long temporal baseline interferograms for optimal windowing
-Ikeep= (frameTable.SecondaryDate < datetime(2018,10,1) & frameTable.TemporalBaseline < 200) |...
-    (frameTable.SecondaryDate >= datetime(2018,10,1) & frameTable.TemporalBaseline <= 36);
-frameTable= frameTable(Ikeep,:);
-
-% Remove interferograms which do not connect to the larger network
-frameTable= flow.keepConnectedGraph(frameTable);
-
-
-
 
 %% Stitch and Resave Interferograms
+
+% Read File Metadata
+frameTable= io.shortMetaData(filelist);
 
 % Unique missions and tracks
 Missions= unique(frameTable.Mission);
 Tracks= unique(frameTable.Track);
+
+fprintf('Beginning import of %d frames\n',height(frameTable))
+fprintf('Missions: %s\n',sprintf('%s ',Missions))
+fprintf('Tracks: %s\n',sprintf('%d ',Tracks))
 
 t1= utils.tictoc;
 for m= 1:length(Missions)
