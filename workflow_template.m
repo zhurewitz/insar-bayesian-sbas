@@ -67,15 +67,13 @@ end
 
 
 
-%% Level-2 Processing -- Process Phase Closure Mask and Correct Interferograms
+%% Level-2 Processing -- Record Phase Closure
 
-flow.processClosureMask(L1filename,L2filename);
-
-flow.applyClosureCorrection(L1filename,L2filename);
+flow.recordClosure(L1filename,L2filename);
 
 
 
 %% Level-3 Processing -- Estimate Displacement Timeseries
 
-flow.processDisplacementTimeseries(L2filename,L3filename)
+flow.processDisplacementTimeseries(L1filename,L3filename)
 
