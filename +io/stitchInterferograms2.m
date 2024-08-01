@@ -83,8 +83,10 @@ for j= 1:Nframes
         tmpConn(Ilat,Ilong)= frameConnComp;
     end
     tmpMask(Ilat,Ilong)= ~isnan(frameLOS);
-
-    OVERLAP= missingMask & tmpMask;
+    
+    % Mask overlap region by coherence value (poor coherence regions
+    % introduce stitching errors)
+    OVERLAP= missingMask & tmpMask & tmpCOH > .6;
     
     correction= zeros(imSize);
     if any(OVERLAP,'all')
