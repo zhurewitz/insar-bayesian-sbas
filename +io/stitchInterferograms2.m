@@ -1,10 +1,11 @@
 %% Stitch Interferograms
 
-function [infLong,infLat,interferogram,coherence,connComp,missingMask]=...
+function [infLong,infLat,interferogram,coherence,connComp,missingMask,errorFlag]=...
     stitchInterferograms2(filelist)
 
- dL= 1/1200;
+dL= 1/1200;
 
+errorFlag= 0;
 
 filelist= string(filelist);
 
@@ -94,7 +95,9 @@ for j= 1:Nframes
         correction= -polyval(p,LONG);
     else
         if j > 1
-            warning('No coherent overlap found when stitching file %s, no correction applied',filelist(i))
+            errorFlag= 1;
+            warning('No coherent overlap found when stitching file %s',filelist(i))
+            correction= -mean(tmpLOS,'all','omitmissing')+ mean(interferogram,'all','omitmissing');
         end
     end
 

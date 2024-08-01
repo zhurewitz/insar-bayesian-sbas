@@ -89,8 +89,16 @@ for m= 1:length(Missions)
             stitchNames= subTable.Fullname(subTable.PrimaryDate == primaryDate(k) & subTable.SecondaryDate == secondaryDate(k),:);
             
             % Load and stich interferograms
-            [infLong,infLat,displacementLOS, coherence, connComp]= io.stitchInterferograms2(stitchNames);
+            warning off
+            [infLong,infLat,displacementLOS, coherence, connComp,~,errorFlag]= ...
+                io.stitchInterferograms2(stitchNames);
+            warning on
             
+            if errorFlag
+                warning('Interferogram frames [%s] cannot be stitched together, omitting',...
+                    strjoin(stitchNames))
+                continue
+            end
             
             
             %% Place on Common Grid
