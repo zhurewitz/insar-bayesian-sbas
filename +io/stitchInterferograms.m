@@ -99,7 +99,8 @@ for j= 1:Nframes
         if j > 1
             errorFlag= 1;
             warning('No coherent overlap found when stitching file %s',filelist(i))
-            correction= -mean(tmpLOS,'all','omitmissing')+ mean(interferogram,'all','omitmissing');
+            correction= -mean(tmpLOS,'all','omitmissing')+ ...
+                mean(interferogram,'all','omitmissing')+ zeros(imSize,'single');
         end
     end
 
