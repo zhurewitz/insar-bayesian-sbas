@@ -91,7 +91,7 @@ for m= 1:length(Missions)
             % Load and stich interferograms
             warning off
             [infLong,infLat,displacementLOS, coherence, connComp,~,errorFlag]= ...
-                io.stitchInterferograms2(stitchNames);
+                io.stitchInterferograms(stitchNames);
             warning on
             
             if errorFlag

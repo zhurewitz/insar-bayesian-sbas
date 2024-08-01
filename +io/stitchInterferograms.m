@@ -1,7 +1,7 @@
 %% Stitch Interferograms
 
 function [infLong,infLat,interferogram,coherence,connComp,missingMask,errorFlag]=...
-    stitchInterferograms2(filelist)
+    stitchInterferograms(filelist)
 
 dL= 1/1200;
 
