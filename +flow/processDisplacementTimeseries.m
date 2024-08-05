@@ -101,7 +101,12 @@ path= fullfile(basepath,trackstr);
 start= [ChunkSize(1)*(ty-1)+1 ChunkSize(2)*(tx-1)+1 1];
 
 h5.writeStackInf(L3filename,path,'data',single(Optimizer),Size,start,ChunkSize)
+h5.writeatts(L3filename,path,'data','description','Posterior mean',...
+    'units','mm','direction','LOS','orientation','upwards')
+
 h5.writeStackInf(L3filename,path,'SBAS',single(SBASTimeseries),Size,start,ChunkSize)
+h5.writeatts(L3filename,path,'SBAS','description','Traditional SBAS',...
+    'units','mm','direction','LOS','orientation','upwards')
 
 h5.writeInf(L3filename,path,'date',Date)
 h5.writeScalar(L3filename,path,'referenceDate',ReferenceDate)
@@ -134,6 +139,8 @@ start= [1 1 tx ty];
 count= [Ndate Ndate 1 1];
 
 h5write(L3filename,datasetname,PosteriorCovariance,start,count);
+h5.writeatts(L3filename,path,'posteriorCovariance','description',...
+    'Posterior covariance matrix','units','mm^2','direction','LOS','orientation','upwards')
 
 end
 
