@@ -1,6 +1,6 @@
 %% Estimate Displacement Timeseries
 
-function [Optimizer,Date,ReferenceDate,PosteriorCovarianceSqrt,SBASTimeseries]= ...
+function [Optimizer,Date,ReferenceDate,PosteriorCovariance,SBASTimeseries]= ...
     estimateDisplacementTimeseries(Stack,PrimaryDate,SecondaryDate)
 % Prepare Stack
 
@@ -108,6 +108,8 @@ DISPtmp= nan([prod(Size) Ndate]);
 DISPtmp(Idata,:)= OptimizerFlat';
 Optimizer= reshape(DISPtmp,[Size Ndate]);
 
+PosteriorCovariance= (eye(Ndate)- K*(M*G))*B_x; % Posterior covariance matrix
+
 
 
 
@@ -122,38 +124,6 @@ SBASFlat= interp1([ReferenceDate; PostingDate],[zeros(1,width(y)); timeseriesSBA
 SBAStmp= nan([prod(Size) Ndate]);
 SBAStmp(Idata,:)= SBASFlat';
 SBASTimeseries= reshape(SBAStmp,[Size Ndate]);
-
-
-
-
-%% Posterior Covariance
-
-PosteriorCovarianceSqrt= (eye(Ndate)- K*(M*G))*B_x; % Posterior covariance
-
-
-% The posterior covariance is not necessarily a symmetric-positive-definite
-% matrix due to floating-point errors. Instead, the matrix is stored as its
-% square root, eliminating the eigenvalues which are complex or to small to
-% exceed floating-point precision. 
-
-% Eigenvector decomposition
-[V,D]= eig(PosteriorCovarianceSqrt);
-d= diag(D);
-
-% Define tolerance as suggested in MATLAB documentation
-% https://www.mathworks.com/help/matlab/math/determine-whether-matrix-is-positive-definite.html
-% See the section on Numerical Considerations
-tolerance= length(d)*eps(max(d));
-Itol= d > tolerance;
-eigenvectors= real(V(:,Itol));
-eigenvalues= real(d(Itol))';
-
-% Square root of the posterior covariance
-PosteriorCovarianceSqrt= real(sqrt(eigenvalues).*eigenvectors);
-
-% Note: The full covariance matrix can be reconstructed, to within
-% floating-point precision, with the following:
-% PosteriorCovariance= PosteriorCovarianceSqrt*PosteriorCovarianceSqrt';
 
 
 
