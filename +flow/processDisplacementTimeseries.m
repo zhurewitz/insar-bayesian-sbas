@@ -138,7 +138,7 @@ end
 start= [1 1 tx ty];
 count= [Ndate Ndate 1 1];
 
-h5write(L3filename,datasetname,PosteriorCovariance,start,count);
+h5write(L3filename,datasetname,single(PosteriorCovariance),start,count);
 h5.writeatts(L3filename,path,'posteriorCovariance','description',...
     'Posterior covariance matrix','units','mm^2','direction','LOS','orientation','upwards')
 
