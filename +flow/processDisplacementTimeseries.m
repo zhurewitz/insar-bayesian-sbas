@@ -30,7 +30,7 @@ for m= 1:length(Missions)
         
         [PrimaryDate,SecondaryDate]= io.loadDates(L1filename,'L1',Mission,Track);
         
-        S= h5info(L1filename,fullfile('/interferogram/L1-stitched/',name,'data'));
+        S= h5info(L1filename,fullfile(path,name,'data'));
         ChunkSize= S.ChunkSize;
         Size= S.Dataspace.MaxSize;
         
@@ -47,12 +47,17 @@ for m= 1:length(Missions)
                 end
 
                 % Estimate displacement timeseries from interferogram stack
-                [Optimizer,Date,ReferenceDate,PosteriorCovariance]= ...
+                [Optimizer,Date,ReferenceDate,PosteriorCovariance,SBASTimeseries]= ...
                     flow.estimateDisplacementTimeseries(Stack,PrimaryDate,SecondaryDate);
 
 
                 % Save timeseries
-                saveTimeseries(L3filename,Mission,Track,Size,ChunkSize,tx,ty,Optimizer,Date,ReferenceDate,PosteriorCovariance)
+                saveTimeseries(L3filename,Mission,Track,Size,ChunkSize,tx,ty,...
+                    Optimizer,Date,ReferenceDate,SBASTimeseries)
+                
+                % Save posterior covariance
+                saveCovariance(L3filename,Mission,Track,tx,ty,NtilesX,NtilesY,...
+                    PosteriorCovariance)
                 
                 fprintf('Mission %d/%d. Track %d/%d. Tile %d/%d processed. Elapsed time %0.1fmin.\n',...
                 m,length(Missions),t,length(Tracks),(ty-1)*NtilesX+tx,NtilesY*NtilesX,(toc-t2)/60)
@@ -83,24 +88,54 @@ Stack= h5read(L1filename,fullfile(path,'data'),start,count);
 end
 
 
+
 %% Save Timeseries
+
 function saveTimeseries(L3filename,Mission,Track,Size,ChunkSize,tx,ty,...
-    Optimizer,Date,ReferenceDate,PosteriorCovariance)
+    Optimizer,Date,ReferenceDate,SBASTimeseries)
 
 basepath= '/timeseries/L3-displacement';
 trackstr= strcat(Mission,'-',string(Track));
 path= fullfile(basepath,trackstr);
 
 start= [ChunkSize(1)*(ty-1)+1 ChunkSize(2)*(tx-1)+1 1];
-% count= [ChunkSize(1:2) Inf];
 
 h5.writeStackInf(L3filename,path,'data',single(Optimizer),Size,start,ChunkSize)
+h5.writeStackInf(L3filename,path,'SBAS',single(SBASTimeseries),Size,start,ChunkSize)
 
 h5.writeInf(L3filename,path,'date',Date)
 h5.writeScalar(L3filename,path,'referenceDate',ReferenceDate)
 
 end
 
+
+
+%% Save Posterior Covariance
+
+function saveCovariance(L3filename,Mission,Track,tx,ty,NtilesX,NtilesY,...
+    PosteriorCovariance)
+
+basepath= '/timeseries/L3-displacement';
+trackstr= strcat(Mission,'-',string(Track));
+path= fullfile(basepath,trackstr);
+datasetname= fullfile(path,'posteriorCovariance');
+
+Ndate= height(PosteriorCovariance);
+
+datasetsize= [Ndate Ndate NtilesX NtilesY];
+chunksize= [Ndate Ndate 1 1];
+
+if ~h5.exist(L3filename,datasetname)
+    h5create(L3filename,datasetname,datasetsize,"Datatype",'single',...
+        'Chunksize',chunksize,'Deflate',3,'Shuffle',true,'Fletcher32',true);
+end
+
+start= [1 1 tx ty];
+count= [Ndate Ndate 1 1];
+
+h5write(L3filename,datasetname,PosteriorCovariance,start,count);
+
+end
 
 
 
@@ -127,16 +162,3 @@ end
 % h5.writeatts(L2filename,L2path,'data',Attributes{:})
 % 
 % end
-
-
-
-% %% Plot
-                % figure(1)
-                % h= pcolor(Optimizer(:,:,1));
-                % shading flat
-                %
-                % for k= 1:length(Date)
-                %     h.CData= Optimizer(:,:,k);
-                %     drawnow
-                %     pause(.1)
-                % end
