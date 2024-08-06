@@ -19,9 +19,13 @@ for m= 1:length(Missions)
     for t= 1:length(Tracks)
         Track= Tracks(t);
 
-        path= '/interferogram/L1-stitched';
+        basepathL1= '/interferogram/L1-stitched';
+        basepathL3= '/timeseries/L3-displacement';
         name= strcat(Mission,'-',string(Track));
-        if ~h5.exist(L1filename,path,name)
+        pathL1= fullfile(basepathL1,name);
+        pathL3= fullfile(basepathL3,name);
+        
+        if ~h5.exist(L1filename,pathL1)
             continue
         end
 
@@ -30,7 +34,7 @@ for m= 1:length(Missions)
         
         [PrimaryDate,SecondaryDate]= io.loadDates(L1filename,'L1',Mission,Track);
         
-        S= h5info(L1filename,fullfile(path,name,'data'));
+        S= h5info(L1filename,fullfile(pathL1,'data'));
         ChunkSize= S.ChunkSize;
         Size= S.Dataspace.MaxSize;
         
@@ -40,12 +44,14 @@ for m= 1:length(Missions)
         for ty= 1:NtilesY
             for tx= 1:NtilesX
                 % Check to see if stack has been processed before
-                Chunk= h5.readChunk(L3filename,path,name,ty,tx,1);
-                
-                if any(~isnan(Chunk),'all')
-                    fprintf('Mission %d/%d. Track %d/%d. Tile %d/%d already processed, continuing. Elapsed time %0.1fmin.\n',...
-                        m,length(Missions),t,length(Tracks),(ty-1)*NtilesX+tx,NtilesY*NtilesX,(toc-t2)/60)
-                    continue
+                if h5.exist(L3filename,pathL3,'data')
+                    Chunk= h5.readChunk(L3filename,pathL3,'data',name,ty,tx,1);
+
+                    if any(~isnan(Chunk),'all')
+                        fprintf('Mission %d/%d. Track %d/%d. Tile %d/%d already processed, continuing. Elapsed time %0.1fmin.\n',...
+                            m,length(Missions),t,length(Tracks),(ty-1)*NtilesX+tx,NtilesY*NtilesX,(toc-t2)/60)
+                        continue
+                    end
                 end
                 
                 % Load chunk stack
