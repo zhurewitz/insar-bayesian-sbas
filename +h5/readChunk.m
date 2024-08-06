@@ -1,13 +1,13 @@
 %% HDF5 Read Chunk 
 
-function Chunk= readChunk(filename,path,name,i,j,k)
+function Chunk= readChunk(filename,path,name,j,i,k)
 
 arguments
     filename
     path
     name
-    i= 1;
     j= 1;
+    i= 1;
     k= 1;
 end
 
