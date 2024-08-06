@@ -39,6 +39,15 @@ for m= 1:length(Missions)
 
         for ty= 1:NtilesY
             for tx= 1:NtilesX
+                % Check to see if stack has been processed before
+                Chunk= h5.readChunk(L3filename,path,name,ty,tx,1);
+                
+                if any(~isnan(Chunk),'all')
+                    fprintf('Mission %d/%d. Track %d/%d. Tile %d/%d already processed, continuing. Elapsed time %0.1fmin.\n',...
+                        m,length(Missions),t,length(Tracks),(ty-1)*NtilesX+tx,NtilesY*NtilesX,(toc-t2)/60)
+                    continue
+                end
+                
                 % Load chunk stack
                 Stack= loadInterferogramStack(L1filename,Mission,Track,ChunkSize,tx,ty);
                 
