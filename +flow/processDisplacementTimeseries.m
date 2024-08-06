@@ -45,7 +45,7 @@ for m= 1:length(Missions)
             for tx= 1:NtilesX
                 % Check to see if stack has been processed before
                 if h5.exist(L3filename,pathL3,'data')
-                    Chunk= h5.readChunk(L3filename,pathL3,'data',name,ty,tx,1);
+                    Chunk= h5.readChunk(L3filename,pathL3,'data',ty,tx,1);
 
                     if any(~isnan(Chunk),'all')
                         fprintf('Mission %d/%d. Track %d/%d. Tile %d/%d already processed, continuing. Elapsed time %0.1fmin.\n',...
