@@ -50,7 +50,7 @@ end
 
 function saveStations(workdir,LatLim,LongLim)
 
-filename= fullfile(workdir,'GNSS/stationList.txt');
+filename= fullfile(workdir,'GNSS/allGNSSstations.txt');
 
 Stations= flag.downloadUNRStations;
 
