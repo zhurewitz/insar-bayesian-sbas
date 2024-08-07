@@ -35,4 +35,12 @@ writelines(TrainID,TrainFilename)
 writelines(TestID,TestFilename)
 writelines(ValidateID,ValidateFilename)
 
+fprintf('Split GNSS Dataset\n')
+fprintf('Training dataset - %d/%d (%d%%) stations written to: \n%s\n',...
+    Ntrain,N,trainPercentage,TrainFilename)
+fprintf('Testing dataset - %d/%d (%d%%) stations written to: \n%s\n',...
+    Ntest,N,testPercentage,TestFilename)
+fprintf('Validation dataset - %d/%d (%d%%) stations written to: \n%s\n',...
+    N-Ntrain-Ntest,N,100-trainPercentage-testPercentage,ValidateFilename)
+fprintf('\n')
 end
