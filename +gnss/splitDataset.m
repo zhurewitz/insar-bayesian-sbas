@@ -27,9 +27,9 @@ TestID= sort(StationID(I(Ntrain+(1:Ntest))));
 ValidateID= sort(StationID(I(Ntrain+Ntest+1:end)));
 
 
-TrainFilename= fullfile(workdir,'GNSS/trainStations.txt');
-TestFilename= fullfile(workdir,'GNSS/testStations.txt');
-ValidateFilename= fullfile(workdir,'GNSS/validateStations.txt');
+TrainFilename= fullfile(workdir,'GNSS/trainingStations.txt');
+TestFilename= fullfile(workdir,'GNSS/testingStations.txt');
+ValidateFilename= fullfile(workdir,'GNSS/validationStations.txt');
 
 writelines(TrainID,TrainFilename)
 writelines(TestID,TestFilename)
