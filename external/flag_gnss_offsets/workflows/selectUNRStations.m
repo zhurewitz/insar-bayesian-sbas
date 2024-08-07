@@ -2,20 +2,15 @@
 % Select and Save List of GNSS Stations from UNR
 % Station details at: http://geodesy.unr.edu/PlugNPlayPortal.php
 
-% Bounding box
-LatLim= [34.75 37.75];
-LongLim= [-122 -118];
-
-% Output filename
-filename= 'CVstations.txt';
+function selectUNRStations(filename,LatLim,LongLim)
 
 % Plot
-figure(1)
 displayBoundingBox(LatLim,LongLim);
 
 % Save file
 saveStations(filename,LatLim,LongLim)
 
+end
 
 
 
