@@ -2,13 +2,13 @@
 % Select and Save List of GNSS Stations from UNR
 % Station details at: http://geodesy.unr.edu/PlugNPlayPortal.php
 
-function selectUNRStations(filename,LatLim,LongLim)
+function selectUNRStations(workdir,LatLim,LongLim)
 
 % Plot
-displayBoundingBox(LatLim,LongLim);
+displayBoundingBox(workdir,LatLim,LongLim);
 
 % Save file
-saveStations(filename,LatLim,LongLim)
+saveStations(workdir,LatLim,LongLim)
 
 end
 
@@ -16,7 +16,7 @@ end
 
 %% Plot
 
-function displayBoundingBox(LatLim,LongLim)
+function displayBoundingBox(workdir,LatLim,LongLim)
 
 displayFactor= 2;
 
@@ -36,18 +36,21 @@ hold off
 geolimits(YLIM,XLIM)
 set(gca,'FontSize',16,'FontName','Times')
 
+PNGfilename= fullfile(workdir,"GNSS/allGNSSstations.png");
+exportgraphics(gcf,PNGfilename,"Resolution",300)
+
+PDFfilename= fullfile(workdir,"GNSS/allGNSSstations.pdf");
+exportgraphics(gcf,PDFfilename)
+
 end
 
 
 
 %% Save Stations in Text File
 
-function saveStations(filename,LatLim,LongLim)
+function saveStations(workdir,LatLim,LongLim)
 
-if isempty(filename)
-    fprintf('No output file selected, not saving\n')
-    return
-end
+filename= fullfile(workdir,'GNSS/stationList.txt');
 
 Stations= flag.downloadUNRStations;
 
