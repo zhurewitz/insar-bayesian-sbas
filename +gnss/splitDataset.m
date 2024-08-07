@@ -12,8 +12,7 @@ end
 
 allStationsFilename= fullfile(workdir,'GNSS/allGNSSstations.txt');
 
-StationID= readlines(allStationsFilename);
-StationID(StationID == "")= [];
+StationID= readlines(allStationsFilename,"EmptyLineRule","skip");
 
 N= length(StationID);
 Ntrain= ceil(N*trainPercentage/100);
