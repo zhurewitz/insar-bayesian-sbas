@@ -1,6 +1,6 @@
 %% Graph Lines
 
-function [lx,ly] = graphLines(G, x, y)
+function [lx,ly,I] = graphLines(G, x, y)
 
 E= G.Edges.EndNodes;
 
@@ -11,6 +11,8 @@ else
 end
 
 ly= reshape([y(E'); nan(1,height(E))],1,[]);
+
+I= ceil((1:length(lx))/3);
 
 end
 
