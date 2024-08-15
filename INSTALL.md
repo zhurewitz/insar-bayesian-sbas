@@ -2,8 +2,8 @@
 
 ## Fast Installation Instructions
 
-1. Clone this library and the [`matlab-fast-geometry`](https://github.com/zhurewitz/matlab-fast-geometry) library into a dedicated MATLAB-specific `Libraries` directory separate from your intended MATLAB work directory.
-2. Add all folders and subfolders of `Libraries` to your MATLAB path.
+1. Clone this library into a dedicated `Libraries` directory separate from your intended MATLAB project directory.
+2. Add this library to your MATLAB path.
 
 
 ## Detailed Installation Instructions
@@ -16,16 +16,15 @@
 
     <img src="images/directoryStructure.png" width=200>
 
-1. Clone this repository and the [`matlab-fast-geometry`](https://github.com/zhurewitz/matlab-fast-geometry) library into the `Libraries` directory. Github Desktop is recommended for users unfamiliar with command line. The download URLs are:
+1. Clone this repository into the `Libraries` directory. [Github Desktop](https://github.com/apps/desktop) is recommended for users unfamiliar with command line. The download URL is:
     
-    1. `https://github.com/zhurewitz/insar-bayesian-sbas.git`
-    2. `https://github.com/zhurewitz/matlab-fast-geometry.git`
+    * `https://github.com/zhurewitz/insar-bayesian-sbas.git`
 
     Your directory structure should now look like:
 
     <img src="images/cloned.png" width=300>
 
-1. At the top of the screen in the `Home` tab, click the `Set Path` button as shown. Add both libraries to your path and save
+1. At the top of the screen in the `Home` tab, click the `Set Path` button as shown. Add the library to your path and save. [See MATLAB documentation for more details.](https://www.mathworks.com/help/matlab/matlab_env/add-remove-or-reorder-folders-on-the-search-path.html)
 
     <img src="images/setPath.png" width=500>
 

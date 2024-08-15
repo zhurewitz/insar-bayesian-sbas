@@ -32,8 +32,8 @@ You will need the following:
 ### Installation
 
 The fast installation instructions are as follows: 
-1. Clone this library and the [`matlab-fast-geometry`](https://github.com/zhurewitz/matlab-fast-geometry) library into a dedicated MATLAB-specific `Libraries` directory separate from your intended MATLAB work directory.
-2. Add all folders and subfolders of `Libraries` to your MATLAB path.
+1. Clone this library into a dedicated `Libraries` directory separate from your intended MATLAB project directory.
+2. Add this library to your MATLAB path.
 
 For more detailed installation instructions, see the [INSTALL.md](INSTALL.md) file.
 
