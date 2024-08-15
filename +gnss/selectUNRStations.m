@@ -52,7 +52,7 @@ function saveStations(workdir,LatLim,LongLim)
 
 filename= fullfile(workdir,'GNSS/allGNSSstations.txt');
 
-Stations= flag.downloadUNRStations;
+Stations= gnss.downloadUNRStations;
 
 I= (LatLim(1) <= Stations.Latitude & Stations.Latitude <= LatLim(2)) &...
    (LongLim(1) <= Stations.Longitude & Stations.Longitude <= LongLim(2));
