@@ -43,31 +43,13 @@ For more detailed installation instructions, see the [INSTALL.md](INSTALL.md) fi
 
 Interferograms in NISAR format are archived and can be downloaded from the Alaska Satellite Facility's (ASF) [Vertex](https://search.asf.alaska.edu/#/?dataset=SENTINEL-1%20INTERFEROGRAM%20(BETA)) website. At the present, they are only available over a few limited regions for calibration and validation purposes. You will need a [NASA Earthdata](https://www.earthdata.nasa.gov/) account to download data products. 
 
+BInSAR provides a set of visual workflows for data download and processing, designed to be accessible with only minimal programming experience. To get started:
 
+1. Make a local directory for the code for this project and navigate to it in the MATLAB `Current Folder` tab.
 
-1. Select a bounding box for your study area, consisting of a south and north latitude and a west and east longitude. 
+2. In MATLAB's command window, type `startUp`. This function will copy the workflow template files and open the first step.
 
-2. Select interferogram tracks. The code is not guaranteed to work if there is only a tiny sliver of overlap between the study region and the interferogram track, so it is important to manually determine suitable tracks. If desired, expand the bounding box to accomodate tracks which barely intersect. 
-
-    1. Copy the [areaOfInterest_template.m](templates/areaOfInterest_template.m) script from the `template` directory to your project directory and rename as desired. In MATLAB, fill it out and run. The displayed text ("POLYGON...") will be copied to your clipboard.
-
-    3. On the ASF Vertex website, in the dataset menu, select "ARIA S1 GUNW". Click the Filters icon and paste the text into the Area of Interest box. 
-
-        * Do NOT select anything for the "File Type" filter, as there is a bug which prevents reading of data after 2022 (as of June 2024).
-
-    4. Select update. Note down all the interferogram paths/tracks which intersect the bounding box with significant overlap. 
-
-3. Copy the `dataDownload_template.m` (PLANNED) script to your project directory and rename as desired. In MATLAB, fill it out and run. 
-
-    You will need to provide:
-
-    * The full path to your data directory. A set of interferogram products can easily take up 100s of Gb of memory, so a directory in an external hard drive is recommended for some users. 
-
-    * The latitude and longitude limits of your study area. 
-
-    * The start and end date of your desired output timeseries. 
-
-    * The tracks you selected in the previous step.
+3. Follow along the workflows!
 
 ### Processing
 
