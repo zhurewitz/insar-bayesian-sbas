@@ -20,7 +20,7 @@ if exist(filename,'file')
 end
 
 for i= 1:length(StationID)
-    flag.appendManualOffset(filename,StationID(i),OffsetDate(i),Information(i), true)
+    gnss.appendManualOffset(filename,StationID(i),OffsetDate(i),Information(i), true)
 end
 
 end

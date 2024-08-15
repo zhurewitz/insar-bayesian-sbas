@@ -23,7 +23,7 @@ displayFactor= 2;
 XLIM= mean(LongLim)+ displayFactor*.5*[-1 1]*diff(LongLim);
 YLIM= mean(LatLim)+ displayFactor*.5*[-1 1]*diff(LatLim);
 
-Stations= flag.downloadUNRStations;
+Stations= gnss.downloadUNRStations;
 
 clf
 set(gcf,'Color','white')
