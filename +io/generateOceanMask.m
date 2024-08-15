@@ -69,7 +69,7 @@ py= py(1:k);
 
 %% Make Ocean/Water Mask and Save
 
-OCEAN= ~inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,px,py);
+OCEAN= ~geo.inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,px,py);
 
 path= '/grid/';
 h5.write(h5filename,path,'oceanMask',uint8(OCEAN),'Datatype','uint8',...

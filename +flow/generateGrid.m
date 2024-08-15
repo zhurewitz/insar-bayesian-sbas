@@ -36,7 +36,7 @@ metaGrid= utils.createGrid(metaLatLim,metaLongLim,dLmeta,true);
 %% Detrending Matrices
 
 if calculateReference
-    IN= inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,referenceLongitude,referenceLatitude);
+    IN= geo.inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,referenceLongitude,referenceLatitude);
 
     % Detrending matrices
     [LONG,LAT]= meshgrid(single(commonGrid.Long),single(commonGrid.Lat));
