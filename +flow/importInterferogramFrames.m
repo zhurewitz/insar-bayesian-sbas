@@ -136,9 +136,9 @@ for m= 1:length(Missions)
             %% Detrend Interferogram by Elevation
             % Stratified atmosphere can cause elevation-correlated signals
             % in the interferograms. Correct by removing the linear trend
-            % with elevation.
+            % with elevation. Only evaluate using high-coherence pixels.
             
-            I= ~isnan(LOS) & Elevation > 0;
+            I= ~isnan(LOS) & COH >= 0.7;
             [p,~,mu]= polyfit(Elevation(I),LOS(I),1);
             correction= polyval(p,Elevation,[],mu);
             LOS= LOS- correction;
@@ -146,8 +146,9 @@ for m= 1:length(Missions)
             
             %% Detrend Interferogram to Reference Area
             
-            % Estimate trend, excluding missing values
-            v= LOS(IN);
+            % Estimate trend to reference area, excluding missing values
+            % and low-coherence pixels.
+            v= LOS(IN & COH >= 0.7);
             Idata= ~isnan(v);
             p= referenceTrendMatrix(Idata,:)\v(Idata);
             

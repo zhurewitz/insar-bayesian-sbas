@@ -86,7 +86,7 @@ for j= 1:Nframes
     
     % Mask overlap region by coherence value (poor coherence regions
     % introduce stitching errors)
-    OVERLAP= missingMask & tmpMask & tmpCOH > .6;
+    OVERLAP= missingMask & tmpMask & tmpCOH > .7;
     
     correction= zeros(imSize);
     if any(OVERLAP,'all')
