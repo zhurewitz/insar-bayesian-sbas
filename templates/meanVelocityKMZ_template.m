@@ -83,7 +83,7 @@ Mask= .8*(~isnan(meanVelocity))+ .2;
 
 infname= strcat('MeanVelocity-',Mission,'-',string(Track));
 
-utils.writeKMZImage(GoogleEarthDir,infname,grid.LatLim,grid.LongLim,...
+kmz.writeKMZImage(GoogleEarthDir,infname,grid.LatLim,grid.LongLim,...
     Image,Mask);
 
 
@@ -100,6 +100,6 @@ Mask= .8*(~isnan(standardDeviation))+ .2;
 
 infname= strcat('StandardDeviation-',Mission,'-',string(Track));
 
-utils.writeKMZImage(GoogleEarthDir,infname,grid.LatLim,grid.LongLim,...
+kmz.writeKMZImage(GoogleEarthDir,infname,grid.LatLim,grid.LongLim,...
     Image,Mask);
 

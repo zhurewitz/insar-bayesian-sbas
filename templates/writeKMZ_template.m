@@ -41,5 +41,5 @@ mask= .8*(~isnan(Page))+ .2;
 
 infname= strcat(Mission,'-',string(Track),'-',string(k));
 
-utils.writeKMZImage(GoogleEarthDir,infname,LatLim,LongLim,interferogramImage,mask);
+kmz.writeKMZImage(GoogleEarthDir,infname,LatLim,LongLim,interferogramImage,mask);
 
