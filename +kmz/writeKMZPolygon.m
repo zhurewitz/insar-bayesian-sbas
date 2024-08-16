@@ -20,6 +20,8 @@ if ~exist(path,'dir')
     mkdir(path)
 end
 
+if ~any(isnan(polyLong))
+
 coords= [polyLong; polyLat; zeros(size(polyLong))];
 
 % Format coordinate string
@@ -31,6 +33,27 @@ Document.name= name;
 Document.Placemark.name= name;
 Document.Placemark.Polygon.outerBoundaryIs.LinearRing.coordinates= coordstr;
 
+else
+    [Istart,Iend,Value]= utils.uniqueRegions(~isnan(polyLong));
+    
+    Istart= Istart(Value);
+    Iend= Iend(Value);
+    
+    for i= 1:length(Istart)
+        I= Istart(i):Iend(i);
+
+        coords= [polyLong(I); polyLat(I); zeros(1,sum(I))];
+
+        % Format coordinate string
+        coordstr= sprintf("%g,%g,%g ",coords);
+
+        % Add to struct
+        Document= struct;
+        Document.name= name;
+        Document.Placemark.name= name;
+        Document.Placemark.MultiGeometry.Polygon(i).outerBoundaryIs.LinearRing.coordinates= coordstr;
+    end
+end
 
 
 %% Write KML/KMZ File
