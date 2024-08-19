@@ -54,6 +54,15 @@ else
     lat= [lat nan coords(2,1:end-1)]; 
 end
 
+for i= 1:length(P.innerBoundaryIs)
+    coordstr= P.innerBoundaryIs(i).LinearRing.coordinates;
+
+    coords= reshape(str2num(coordstr),3,[]); %#ok<ST2NM>
+
+    long= [long nan coords(1,1:end-1)]; %#ok<AGROW>
+    lat= [lat nan coords(2,1:end-1)]; %#ok<AGROW>
+end
+
 end
 
 
