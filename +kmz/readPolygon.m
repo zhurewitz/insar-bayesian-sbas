@@ -47,11 +47,11 @@ coordstr= P.outerBoundaryIs.LinearRing.coordinates;
 coords= reshape(str2num(coordstr),3,[]); %#ok<ST2NM>
 
 if isempty(long)
-    long= coords(1,1:end-1);
-    lat= coords(2,1:end-1);
+    long= coords(1,:);
+    lat= coords(2,:);
 else
-    long= [long nan coords(1,1:end-1)]; 
-    lat= [lat nan coords(2,1:end-1)]; 
+    long= [long nan coords(1,:)]; 
+    lat= [lat nan coords(2,:)]; 
 end
 
 for i= 1:length(P.innerBoundaryIs)
@@ -59,8 +59,8 @@ for i= 1:length(P.innerBoundaryIs)
 
     coords= reshape(str2num(coordstr),3,[]); %#ok<ST2NM>
 
-    long= [long nan coords(1,1:end-1)]; %#ok<AGROW>
-    lat= [lat nan coords(2,1:end-1)]; %#ok<AGROW>
+    long= [long nan coords(1,:)]; %#ok<AGROW>
+    lat= [lat nan coords(2,:)]; %#ok<AGROW>
 end
 
 end
