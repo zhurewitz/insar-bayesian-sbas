@@ -18,11 +18,11 @@ file1= fullfile(libraryPath,"templates","startUserInput.mlx");
 copyfile(file1,matlabProjectDir)
 
 % Step 2
-file2= fullfile(libraryPath,"templates","downloadAllARIAURLs.mlx");
+file2= fullfile(libraryPath,"templates","referenceAreaWorkflow.mlx");
 copyfile(file2,matlabProjectDir)
 
 % Step 3
-file3= fullfile(libraryPath,"templates","networkSelection.mlx");
+file3= fullfile(libraryPath,"templates","networkSelectionARIA.mlx");
 copyfile(file3,matlabProjectDir)
 
 
