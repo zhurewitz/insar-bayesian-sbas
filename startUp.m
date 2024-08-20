@@ -25,6 +25,10 @@ copyfile(file2,matlabProjectDir)
 file3= fullfile(libraryPath,"templates","networkSelectionARIA.mlx");
 copyfile(file3,matlabProjectDir)
 
+% Step 4
+file4= fullfile(libraryPath,"templates","interferogramSpatialExtent.mlx");
+copyfile(file4,matlabProjectDir)
+
 
 %% Open Step 1
 
