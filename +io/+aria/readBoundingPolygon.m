@@ -1,13 +1,18 @@
 %% Read Bounding Polygon
 
-function BB= readBoundingPolygon(filename)
+function [Long,Lat]= readBoundingPolygon(filename)
 
 try
-    S= ncread(filename,'productBoundingBox')';
-    S= S(11:end);
-    BB= reshape(sscanf(S,'%f %f,'),2,[]);
+    s= string(ncread(filename,"productBoundingBox")');
+
+    coords= reshape(str2num(extractBetween(s,'((','))')),2,[]); %#ok<ST2NM>
+
+    Long= coords(1,:)';
+    Lat= coords(2,:)';
+
 catch ME
-    BB= [];
+    Long= [];
+    Lat= [];
 end
 
 end
