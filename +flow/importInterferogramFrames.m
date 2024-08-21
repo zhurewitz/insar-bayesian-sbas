@@ -142,6 +142,7 @@ for m= 1:length(Missions)
             [p,~,mu]= polyfit(Elevation(I),LOS(I),1);
             correction= polyval(p,Elevation,[],mu);
             LOS= LOS- correction;
+            elevationTrend= p(1);
             
             
             %% Detrend Interferogram to Reference Area
@@ -189,7 +190,7 @@ for m= 1:length(Missions)
             %% Save Interferogram to HDF5 ProcessingStore File
             
             writeStitchedInterferogram(h5filename,mission,track,primaryDate(k),...
-                secondaryDate(k),LOS,trendMeta,COH,CON);
+                secondaryDate(k),LOS,trendMeta,COH,CON,elevationTrend);
 
             fprintf('Mission %d/%d. Track %d/%d. Interferogram %d/%d saved. Elapsed time %0.1f min\n',...
                 m,length(Missions), t,length(Tracks), k,Npairs,(toc-t1)/60)
@@ -210,7 +211,7 @@ end
 %% Write L1 Stitched Interferogram to H5 Processing File
 
 function writeStitchedInterferogram(L1filename,Mission,Track,PrimaryDate,...
-    SecondaryDate,LOS,trendMeta,COH,CON)
+    SecondaryDate,LOS,trendMeta,COH,CON,elevationTrend)
 
 basename= '/interferogram/L1-stitched/';
 trackstr= strcat(Mission,'-',string(Track));
@@ -251,5 +252,7 @@ if ~isempty(CON)
     h5.write2DInf(L1filename,path,'connComp',CON,k,[300 300 1],3)
 end
 
+h5.writeInf(L1filename,path,'elevationTrend',elevationTrend)
+h5.writeatts(L1filename,path,'elevationTrend','units','mm/m')
 
 end
