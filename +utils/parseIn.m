@@ -2,7 +2,7 @@
 
 function [value, found, I]= parseIn(VARARGIN,key)
 
-I= find(strcmpi(VARARGIN,key));
+I= find(strcmpi(string(VARARGIN),key));
 
 found= ~isempty(I);
 
