@@ -138,7 +138,7 @@ for m= 1:length(Missions)
             % in the interferograms. Correct by removing the linear trend
             % with elevation. Only evaluate using high-coherence pixels.
             
-            I= ~isnan(LOS) & COH >= 0.7;
+            I= ~isnan(LOS) & ~isnan(Elevation) & COH >= 0.7;
             [p,~,mu]= polyfit(Elevation(I),LOS(I),1);
             correction= polyval(p,Elevation,[],mu);
             LOS= LOS- correction;
