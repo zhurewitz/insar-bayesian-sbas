@@ -2,8 +2,6 @@
 
 function writeGrid(filename,path,grid)
 
-utils.checkGrid(grid)
-
 h5.write(filename,path,'latitude',grid.Lat)
 h5.write(filename,path,'longitude',grid.Long)
 
