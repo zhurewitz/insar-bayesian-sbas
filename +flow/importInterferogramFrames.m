@@ -61,6 +61,8 @@ for m= 1:length(Missions)
         
         subTable= frameTable(I,:);
         
+        direction= subTable.Direction(1);
+        
         DatePairs= unique([subTable.PrimaryDate subTable.SecondaryDate],'rows');
         primaryDate= DatePairs(:,1);
         secondaryDate= DatePairs(:,2);
@@ -190,7 +192,7 @@ for m= 1:length(Missions)
             %% Save Interferogram to HDF5 ProcessingStore File
             
             writeStitchedInterferogram(h5filename,mission,track,primaryDate(k),...
-                secondaryDate(k),LOS,trendMeta,COH,CON,elevationTrend);
+                secondaryDate(k),LOS,trendMeta,COH,CON,elevationTrend,direction);
 
             fprintf('Mission %d/%d. Track %d/%d. Interferogram %d/%d saved. Elapsed time %0.1f min\n',...
                 m,length(Missions), t,length(Tracks), k,Npairs,(toc-t1)/60)
@@ -211,7 +213,7 @@ end
 %% Write L1 Stitched Interferogram to H5 Processing File
 
 function writeStitchedInterferogram(L1filename,Mission,Track,PrimaryDate,...
-    SecondaryDate,LOS,trendMeta,COH,CON,elevationTrend)
+    SecondaryDate,LOS,trendMeta,COH,CON,elevationTrend,direction)
 
 basename= '/interferogram/L1-stitched/';
 trackstr= strcat(Mission,'-',string(Track));
@@ -238,11 +240,17 @@ end
 h5.write2DInf(L1filename,path,'data',LOS,k,[300 300 1],3)
 h5.writeatts(L1filename,path,'data','units','mm','direction','LOS','orientation','upwards')
 
-h5.writeatts(L1filename,path,'','mission',Mission,'track',Track,'direction','PLACEHOLDER')
+if strmpi(direction,"A") || strmpi(direction,"Ascending")
+    direction= "ascending";
+elseif strmpi(direction,"D") || strmpi(direction,"Descending")
+    direction= "descending";
+end
+h5.writeatts(L1filename,path,'','mission',Mission,'track',Track,'direction',direction)
 
 h5.writeScalar(L1filename,path,'primaryDate',PrimaryDate,Inf,k)
 h5.writeScalar(L1filename,path,'secondaryDate',SecondaryDate,Inf,k)
 h5.writeScalar(L1filename,path,'temporalBaseline',days(SecondaryDate-PrimaryDate),Inf,k)
+h5.writeatts(L1filename,path,'temporalBaseline','units','days')
 
 h5.write2DInf(L1filename,path,'trendMeta',trendMeta,k,[size(trendMeta) 1])
 h5.writeatts(L1filename,path,'trendMeta','units','mm')
@@ -253,7 +261,7 @@ if ~isempty(CON)
     h5.write2DInf(L1filename,path,'connComp',CON,k,[300 300 1],3)
 end
 
-h5.writeInf(L1filename,path,'elevationTrend',elevationTrend)
+h5.writeScalar(L1filename,path,'elevationTrend',elevationTrend,Inf,k)
 h5.writeatts(L1filename,path,'elevationTrend','units','mm/m')
 
 end
