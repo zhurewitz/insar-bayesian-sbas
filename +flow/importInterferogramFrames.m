@@ -242,6 +242,7 @@ h5.writeatts(L1filename,path,'','mission',Mission,'track',Track,'direction','PLA
 
 h5.writeScalar(L1filename,path,'primaryDate',PrimaryDate,Inf,k)
 h5.writeScalar(L1filename,path,'secondaryDate',SecondaryDate,Inf,k)
+h5.writeScalar(L1filename,path,'temporalBaseline',days(SecondaryDate-PrimaryDate),Inf,k)
 
 h5.write2DInf(L1filename,path,'trendMeta',trendMeta,k,[size(trendMeta) 1])
 h5.writeatts(L1filename,path,'trendMeta','units','mm')
