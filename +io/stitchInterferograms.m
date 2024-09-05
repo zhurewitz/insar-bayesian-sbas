@@ -12,7 +12,7 @@ end
 
 errorFlag= 0;
 
-Crop= ~isempty(inStudyArea);
+Crop= ~isempty(inStudyArea) && any(inStudyArea,'all');
 
 filelist= string(filelist);
 

@@ -28,7 +28,8 @@ referenceTrendMatrix= h5.read(h5filename,'/grid','referenceTrendMatrix');
 commonTrendMatrix= h5.read(h5filename,'/grid','trendMatrix');
 metaTrendMatrix= h5.read(h5filename,'/metaGrid','trendMatrix');
 OCEAN= h5.read(h5filename,'/grid','oceanMask') == 1;
-IN= h5.read(h5filename,'/grid','referenceMask') == 1;
+inReference= h5.read(h5filename,'/grid','referenceMask') == 1;
+inStudyArea= h5.read(h5filename,'/grid','studyAreaMask') == 1;
 Elevation= h5.read(h5filename,'/grid','elevation');
 
 
@@ -93,7 +94,8 @@ for m= 1:length(Missions)
             % Load and stich interferograms
             warning off
             [infLong,infLat,displacementLOS, coherence, connComp,~,errorFlag]= ...
-                io.stitchInterferograms(stitchNames);
+                io.stitchInterferograms(stitchNames,commonGrid.Long,...
+                commonGrid.Lat,inStudyArea);
             warning on
             
             if errorFlag
@@ -151,7 +153,7 @@ for m= 1:length(Missions)
             
             % Estimate trend to reference area, excluding missing values
             % and low-coherence pixels.
-            v= LOS(IN & COH >= 0.7);
+            v= LOS(inReference & COH >= 0.7);
             Idata= ~isnan(v);
             p= referenceTrendMatrix(Idata,:)\v(Idata);
             
