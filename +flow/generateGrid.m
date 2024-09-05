@@ -1,7 +1,8 @@
 %% Generate Grid Information
 
 function generateGrid(h5filename,LongLim,LatLim,...
-    referenceLongitude,referenceLatitude,studyAreaLongitude,studyAreaLatitude)
+    referenceLongitude,referenceLatitude,studyAreaLongitude,studyAreaLatitude,...
+    xorder,yorder)
 
 arguments
     h5filename
@@ -11,6 +12,8 @@ arguments
     referenceLatitude= [];
     studyAreaLongitude= [];
     studyAreaLatitude= [];
+    xorder= 1;
+    yorder= 1;
 end
 
 savedir= fileparts(h5filename);
@@ -48,23 +51,33 @@ if calculateReference
     meanLat= mean(commonGrid.Lat);
     X= LONG- meanLong;
     Y= LAT- meanLat;
-    xref= X(inReference);
-    yref= Y(inReference);
-
-    referenceTrendMatrix= [ones(size(xref),'single') xref yref];
-    % Usage: p= trendMatrix1\data(IN);
-
-    commonGridTrendMatrix= [ones(numel(X),1,'single') X(:) Y(:)];
-    % Usage: TREND= reshape(trendMatrix2*p,commonGrid.Size);
-
-
+    
     [LONGMeta,LATMeta]= meshgrid(metaGrid.Long,metaGrid.Lat);
     Xmeta= LONGMeta- meanLong;
     Ymeta= LATMeta- meanLat;
-
-    metaGridTrendMatrix= [ones(numel(Xmeta),1,'single') Xmeta(:) Ymeta(:)];
-    % Usage: trendMeta= reshape(trendMatrixMeta*p,metaGrid.Size);
-
+    
+    xr= X(inReference);
+    yr= Y(inReference);
+    xc= X(:);
+    yc= Y(:);
+    xm= Xmeta(:);
+    ym= Ymeta(:);
+    
+    referenceTrendMatrix= zeros(length(xr),(yorder+1)*(xorder+1),'single');
+    commonGridTrendMatrix= zeros(length(xc),(yorder+1)*(xorder+1),'single');
+    metaGridTrendMatrix= zeros(length(xm),(yorder+1)*(xorder+1),'single');
+    count= 1;
+    for j= 0:yorder
+        for i= 0:xorder
+            referenceTrendMatrix(:,count)= (xr.^i).*(yr.^j);
+            % Usage: p= trendMatrix1\data(IN);
+            commonGridTrendMatrix(:,count)= (xc.^i).*(yc.^j);
+            % Usage: TREND= reshape(trendMatrix2*p,commonGrid.Size);
+            metaGridTrendMatrix(:,count)= (xm.^i).*(ym.^j);
+            % Usage: trendMeta= reshape(trendMatrixMeta*p,metaGrid.Size);
+            count= count+ 1;
+        end
+    end
 end
 
 if cropStudyArea
