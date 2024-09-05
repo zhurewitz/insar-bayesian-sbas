@@ -1,7 +1,7 @@
 %% Generate Grid Information
 
 function generateGrid(h5filename,LongLim,LatLim,...
-    referenceLongitude,referenceLatitude)
+    referenceLongitude,referenceLatitude,studyAreaLongitude,studyAreaLatitude)
 
 arguments
     h5filename
@@ -9,6 +9,8 @@ arguments
     LatLim
     referenceLongitude= [];
     referenceLatitude= [];
+    studyAreaLongitude= [];
+    studyAreaLatitude= [];
 end
 
 savedir= fileparts(h5filename);
@@ -17,6 +19,7 @@ if ~exist(savedir,'dir')
 end
 
 calculateReference= ~isempty(referenceLongitude);
+cropStudyArea= ~isempty(studyAreaLongitude);
 
 
 % Native interferogram grid increment
@@ -36,7 +39,7 @@ metaGrid= utils.createGrid(metaLatLim,metaLongLim,dLmeta,true);
 %% Detrending Matrices
 
 if calculateReference
-    IN= geo.inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,referenceLongitude,referenceLatitude);
+    inReference= geo.inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,referenceLongitude,referenceLatitude);
 
     % Detrending matrices
     [LONG,LAT]= meshgrid(single(commonGrid.Long),single(commonGrid.Lat));
@@ -45,8 +48,8 @@ if calculateReference
     meanLat= mean(commonGrid.Lat);
     X= LONG- meanLong;
     Y= LAT- meanLat;
-    xref= X(IN);
-    yref= Y(IN);
+    xref= X(inReference);
+    yref= Y(inReference);
 
     referenceTrendMatrix= [ones(size(xref),'single') xref yref];
     % Usage: p= trendMatrix1\data(IN);
@@ -64,6 +67,10 @@ if calculateReference
 
 end
 
+if cropStudyArea
+    inStudyArea= geo.inpolygonfastGrid(commonGrid.Long,commonGrid.Lat,studyAreaLongitude,studyAreaLatitude);
+end
+
 
 
 %% Write to HDF5 File
@@ -72,12 +79,16 @@ path= '/grid/';
 h5.writeGrid(h5filename,path,commonGrid)
 
 if calculateReference
-    h5.write(h5filename,path,'referenceMask',uint8(IN),'Datatype','uint8',...
+    h5.write(h5filename,path,'referenceMask',uint8(inReference),'Datatype','uint8',...
         'ChunkSize',[600 600],'Deflate',9,'Shuffle',true,'Fletcher32',true)
     h5.write(h5filename,path,'referenceTrendMatrix',referenceTrendMatrix,'Datatype','single',...
         'ChunkSize',[10000 1],'Deflate',9,'Shuffle',true,'Fletcher32',true)
     h5.write(h5filename,path,'trendMatrix',commonGridTrendMatrix,'Datatype','single',...
         'ChunkSize',[10000 1],'Deflate',9,'Shuffle',true,'Fletcher32',true)
+end
+if cropStudyArea
+    h5.write(h5filename,path,'studyAreaMask',uint8(inStudyArea),'Datatype','uint8',...
+        'ChunkSize',[600 600],'Deflate',9,'Shuffle',true,'Fletcher32',true)
 end
 
 path= '/metaGrid/';
