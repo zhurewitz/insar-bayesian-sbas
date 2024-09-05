@@ -240,9 +240,9 @@ end
 h5.write2DInf(L1filename,path,'data',LOS,k,[300 300 1],3)
 h5.writeatts(L1filename,path,'data','units','mm','direction','LOS','orientation','upwards')
 
-if strmpi(direction,"A") || strmpi(direction,"Ascending")
+if strcmpi(direction,"A") || strcmpi(direction,"Ascending")
     direction= "ascending";
-elseif strmpi(direction,"D") || strmpi(direction,"Descending")
+elseif strcmpi(direction,"D") || strcmpi(direction,"Descending")
     direction= "descending";
 end
 h5.writeatts(L1filename,path,'','mission',Mission,'track',Track,'direction',direction)
