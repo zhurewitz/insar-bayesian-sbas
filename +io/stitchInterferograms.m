@@ -80,7 +80,7 @@ for j= 1:Nframes
     [frameLOS,frameLat,frameLong,frameCoherence,frameConnComp]=...
         io.readLOSdisplacement(filename);
     
-    [Ilong,Ilat]= insertionIndices(infLong,infLat,frameLong,frameLat,dL);
+    [Iax,Iay,Ibx,Iby]= insertionIndices(infLong,infLat,frameLong,frameLat);
 
     tmpLOS= nan(imSize,'single');
     tmpCOH= nan(imSize,'single');
@@ -91,12 +91,12 @@ for j= 1:Nframes
     end
     tmpMask= false(imSize);
 
-    tmpLOS(Ilat,Ilong)= frameLOS;
-    tmpCOH(Ilat,Ilong)= frameCoherence;
+    tmpLOS(Iay,Iax)= frameLOS(Iby,Ibx);
+    tmpCOH(Iay,Iax)= frameCoherence(Iby,Ibx);
     if ~isempty(frameConnComp)
-        tmpConn(Ilat,Ilong)= frameConnComp;
+        tmpConn(Iay,Iax)= frameConnComp(Iby,Ibx);
     end
-    tmpMask(Ilat,Ilong)= ~isnan(frameLOS);
+    tmpMask(Iay,Iax)= ~isnan(frameLOS(Iby,Ibx));
     
     if Crop
         tmpLOS(~inStudyArea)= nan;
@@ -144,12 +144,11 @@ end
 
 
 
-function [Ix,Iy]= insertionIndices(gridLong,gridLat,inLong,inLat,dL)
+function [Iax,Iay,Ibx,Iby]= insertionIndices(gridLong,gridLat,inLong,inLat)
 
-IXstart= round((min(inLong)- min(gridLong))/dL);
-IYstart= round((min(inLat)- min(gridLat))/dL);
-
-Ix= IXstart+ (1:length(inLong));
-Iy= IYstart+ (1:length(inLat));
+dL= abs(diff(gridLong(1:2)));
+[~,Iax,Ibx]= intersect(round(gridLong/dL),round(inLong/dL));
+dL= abs(diff(gridLat(1:2)));
+[~,Iay,Iby]= intersect(round(gridLat/dL),round(inLat/dL));
 
 end
