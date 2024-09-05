@@ -153,8 +153,8 @@ for m= 1:length(Missions)
             
             % Estimate trend to reference area, excluding missing values
             % and low-coherence pixels.
-            v= LOS(inReference & COH >= 0.7);
-            Idata= ~isnan(v);
+            v= LOS(inReference); % Bugfix -- v is now vector with length height(referenceTrendMatrix)
+            Idata= ~isnan(v) & COH(inReference) >= 0.7;
             p= referenceTrendMatrix(Idata,:)\v(Idata);
             
             % Remove trend
