@@ -1,11 +1,19 @@
 %% Stitch Interferograms
 
 function [infLong,infLat,interferogram,coherence,connComp,missingMask,errorFlag]=...
-    stitchInterferograms(filelist)
+    stitchInterferograms(filelist,infLong,infLat,studyPolygonLong,studyPolygonLat)
 
-dL= 1/1200;
+arguments
+    filelist
+    infLong= [];
+    infLat= [];
+    studyPolygonLong= [];
+    studyPolygonLat= [];
+end
 
 errorFlag= 0;
+
+Crop= ~isempty(studyPolygonLong);
 
 filelist= string(filelist);
 
@@ -43,13 +51,24 @@ end
 [~,I]= sort(boundingBoxes(:,3));
 frameTable= frameTable(I,:);
 
-% Image bounding box (union of all frame bounding boxes)
-boundingBox= [-1 1 -1 1].*max(boundingBoxes.*[-1 1 -1 1],[],1);
-boundingBox = boundingBox + .1*[-1 1 -1 1]; % Bug fix for hyp3 misalignment
+if isempty(infLong)
+    dL= 1/1200;
+    
+    % Image bounding box (union of all frame bounding boxes)
+    boundingBox= [-1 1 -1 1].*max(boundingBoxes.*[-1 1 -1 1],[],1);
+    boundingBox = boundingBox + .1*[-1 1 -1 1]; % Bug fix for hyp3 misalignment
 
-infLong= boundingBox(1):dL:boundingBox(2)+dL;
-infLat= boundingBox(3):dL:boundingBox(4)+dL;
+    infLong= boundingBox(1):dL:boundingBox(2)+dL;
+    infLat= boundingBox(3):dL:boundingBox(4)+dL;
+else
+    dL= abs(diff(infLong(1:2)));
+end
+
 imSize= [length(infLat) length(infLong)];
+
+if Crop
+    IN= geo.inpolygonfastGrid(infLong,infLat,studyPolygonLong,studyPolygonLat);
+end
 
 interferogram= nan(imSize,'single');
 coherence= nan(imSize,'single');
@@ -83,6 +102,15 @@ for j= 1:Nframes
         tmpConn(Ilat,Ilong)= frameConnComp;
     end
     tmpMask(Ilat,Ilong)= ~isnan(frameLOS);
+    
+    if Crop
+        tmpLOS(~IN)= nan;
+        tmpCOH(~IN)= nan;
+        if ~isempty(tmpConn)
+            tmpConn(~IN)= nan;
+        end
+        tmpMask(~IN)= nan;
+    end
     
     % Mask overlap region by coherence value (poor coherence regions
     % introduce stitching errors)
