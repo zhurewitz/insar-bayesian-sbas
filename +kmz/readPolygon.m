@@ -54,7 +54,7 @@ else
     lat= [lat nan coords(2,:)]; 
 end
 
-if ~ismissing(P.innerBoundaryIs(1))
+if isfield(P,"innerBoundaryIs") && ~ismissing(P.innerBoundaryIs(1))
     for i= 1:length(P.innerBoundaryIs)
         coordstr= P.innerBoundaryIs(i).LinearRing.coordinates;
 
