@@ -1,19 +1,18 @@
 %% Stitch Interferograms
 
 function [infLong,infLat,interferogram,coherence,connComp,missingMask,errorFlag]=...
-    stitchInterferograms(filelist,infLong,infLat,studyPolygonLong,studyPolygonLat)
+    stitchInterferograms(filelist,infLong,infLat,inStudyArea)
 
 arguments
     filelist
     infLong= [];
     infLat= [];
-    studyPolygonLong= [];
-    studyPolygonLat= [];
+    inStudyArea= [];
 end
 
 errorFlag= 0;
 
-Crop= ~isempty(studyPolygonLong);
+Crop= ~isempty(inStudyArea);
 
 filelist= string(filelist);
 
@@ -66,10 +65,6 @@ end
 
 imSize= [length(infLat) length(infLong)];
 
-if Crop
-    IN= geo.inpolygonfastGrid(infLong,infLat,studyPolygonLong,studyPolygonLat);
-end
-
 interferogram= nan(imSize,'single');
 coherence= nan(imSize,'single');
 connComp= [];
@@ -104,12 +99,12 @@ for j= 1:Nframes
     tmpMask(Ilat,Ilong)= ~isnan(frameLOS);
     
     if Crop
-        tmpLOS(~IN)= nan;
-        tmpCOH(~IN)= nan;
+        tmpLOS(~inStudyArea)= nan;
+        tmpCOH(~inStudyArea)= nan;
         if ~isempty(tmpConn)
-            tmpConn(~IN)= nan;
+            tmpConn(~inStudyArea)= nan;
         end
-        tmpMask(~IN)= nan;
+        tmpMask(~inStudyArea)= false;
     end
     
     % Mask overlap region by coherence value (poor coherence regions
