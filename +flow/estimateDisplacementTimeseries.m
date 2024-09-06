@@ -55,8 +55,8 @@ t= years(Date- ReferenceDate);
 % Linear/seasonal trend matrix
 A= [t cos(2*pi*t)-1 sin(2*pi*t)];
 
-Bscale= 20; % mm - Covariance scale parameter
-tau= 60/365; % yr - Timescale parameter
+Bscale= 10; % mm - Covariance scale parameter
+tau= 100/365; % yr - Timescale parameter
 tt= [0; t];
 B= Bscale^2*exp(-(tt-tt').^2/(2*tau^2));
 REL= [-1*ones(Ndate,1) eye(Ndate)];
