@@ -2,7 +2,7 @@
 
 function [h,illuminationImage]= plotInterferogram( ...
     h5filename,Flag,Mission,Track,PrimaryDate, SecondaryDate, drawSquare, ...
-    drawElevation, drawClosureMask, ReferenceLongitude, ReferenceLatitude)
+    drawElevation, drawClosureMask, ReferenceLongitude, ReferenceLatitude,Range)
 
 arguments
     h5filename
@@ -16,6 +16,7 @@ arguments
     drawClosureMask= true;
     ReferenceLongitude= [];
     ReferenceLatitude= [];
+    Range= [];
 end
 
 commonGrid= h5.readGrid(h5filename,'/grid');
@@ -58,13 +59,15 @@ if drawClosureMask
     Stack(closureMask)= nan;
 end
 
-RANGE= 100*[-1 1];
+if isempty(Range)
+    Range= 100*[-1 1];
+end
 if drawElevation
     backgroundColor= nan;
 else
     backgroundColor= .8;
 end
-interferogramImage= plt.toColorSimple(Stack,single(plt.colormap2('redblue')),RANGE,backgroundColor);
+interferogramImage= plt.toColorSimple(Stack,single(plt.colormap2('redblue')),Range,backgroundColor);
 
 C= addLayer(illuminationImage,interferogramImage,.8);
 
@@ -76,7 +79,7 @@ h= image(commonGrid.Long,commonGrid.Lat,C);
 plt.pltOptions
 c= colorbar;
 c.Label.String= 'LOS Displacement (mm)';
-plt.colormap2('redblue','Axis',gca,'Range',RANGE)
+plt.colormap2('redblue','Axis',gca,'Range',Range)
 xlim(commonGrid.LongLim)
 ylim(commonGrid.LatLim)
 
