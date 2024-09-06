@@ -137,33 +137,47 @@ for m= 1:length(Missions)
             end
 
             
-            %% Detrend Interferogram by Elevation
+            %% Detrend Interferogram by Elevation and Reference Area
             % Stratified atmosphere can cause elevation-correlated signals
-            % in the interferograms. Correct by removing the linear trend
-            % with elevation. Only evaluate using high-coherence pixels.
-            
-            I= ~isnan(LOS) & ~isnan(Elevation) & COH >= 0.7;
-            E= Elevation/max(Elevation,[],'all');
-            p= polyfit(E(I),LOS(I),1);
-            correction= polyval(p,E);
-            LOS= LOS- correction;
-            elevationTrend= p(1)/max(Elevation,[],'all');
-            
-            
-            %% Detrend Interferogram to Reference Area
-            
-            % Estimate trend to reference area, excluding missing values
-            % and low-coherence pixels.
-            v= LOS(inReference); % Bugfix -- v is now vector with length height(referenceTrendMatrix)
-            Idata= ~isnan(v) & COH(inReference) >= 0.7;
-            p= referenceTrendMatrix(Idata,:)\v(Idata);
-            
-            % Remove trend
-            TREND= reshape(commonTrendMatrix*p,commonGrid.Size);
-            LOS= LOS- TREND;
-            
-            % Preserve trend on metaGrid scale
-            trendMeta= reshape(metaTrendMatrix*p,metaGrid.Size);
+            % in the interferograms, which we estimate with a linear trend.
+            % Additionally, we estimate the long-wavelength spatial trend
+            % (to user-defined polynomial order in x and y) within the
+            % reference area. Only evaluate using high-coherence pixels.
+
+            CORRECTION= zeros(size(LOS));
+            CORRECTIONprevious= zeros(size(LOS));
+            trendMeta= zeros(metaGrid.Size);
+            elevationTrend= 0;
+
+            Ielev= ~isnan(LOS) & ~isnan(Elevation) & COH >= 0.7;
+            E= Elevation/max(Elevation,[],'all'); % Normalized elevation
+
+            for it= 1:20
+                % Trend with Elevation
+                p1= polyfit(E(Ielev),LOS(Ielev)- CORRECTION(Ielev),1);
+                CORRECTION= CORRECTION+ polyval([p1(1) 0],E);
+                
+                % Document the elevation trend
+                elevationTrend= elevationTrend+ p1(1)/max(Elevation,[],'all');
+
+
+                % Detrend Interferogram to Reference Area
+                v= LOS(inReference)- CORRECTION(inReference); % Bugfix -- v is now vector with length height(referenceTrendMatrix)
+                Idata= ~isnan(v) & COH(inReference) >= 0.7;
+                p2= referenceTrendMatrix(Idata,:)\v(Idata);
+                CORRECTION= CORRECTION+ reshape(commonTrendMatrix*p2,commonGrid.Size);
+
+                % Document the trend on the metaGrid
+                trendMeta= trendMeta+ reshape(metaTrendMatrix*p2,metaGrid.Size);
+                
+                if rms(CORRECTION- CORRECTIONprevious,'all','omitnan') < .01
+                    break
+                end
+                CORRECTIONprevious= CORRECTION;
+            end
+
+            % Perform the correction
+            LOS= LOS- CORRECTION;
             
             
             
