@@ -55,7 +55,7 @@ for m= 1:length(Missions)
                 end
                 
                 % Load chunk stack
-                Stack= loadInterferogramStack(L1filename,Mission,Track,ChunkSize,tx,ty);
+                Stack= loadInterferogramStack(L1filename,Mission,Track,tx,ty);
                 
                 if all(isnan(Stack),'all')
                     continue
@@ -89,16 +89,13 @@ end
 
 %% Load Stack of Interferograms
 
-function Stack= loadInterferogramStack(L1filename,Mission,Track,ChunkSize,tx,ty)
+function Stack= loadInterferogramStack(L1filename,Mission,Track,tx,ty)
 
 basepath= '/interferogram/L1-stitched';
 trackstr= strcat(Mission,'-',string(Track));
 path= fullfile(basepath,trackstr);
 
-start= [ChunkSize(1)*(ty-1)+1 ChunkSize(2)*(tx-1)+1 1];
-count= [ChunkSize(1:2) Inf];
-
-Stack= h5read(L1filename,fullfile(path,'data'),start,count);
+Stack= h5.readChunkStack(L1filename,path,'data',ty,tx);
 
 end
 
