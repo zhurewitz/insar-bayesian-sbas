@@ -1,19 +1,18 @@
 %% Plot Interferogram
 
-function [h,illuminationImage]= plotInterferogram( ...
+function [h,c,illuminationImage]= plotInterferogram( ...
     h5filename,Flag,Mission,Track,PrimaryDate, SecondaryDate, drawSquare, ...
-    drawElevation, drawClosureMask, ReferenceLongitude, ReferenceLatitude,Range)
+    drawElevation, ReferenceLongitude, ReferenceLatitude,Range)
 
 arguments
     h5filename
-    Flag {mustBeMember(Flag,["L1","L2"])}
+    Flag {mustBeMember(Flag,["L1","L2","L3"])}
     Mission
     Track
     PrimaryDate
     SecondaryDate
     drawSquare= false;
     drawElevation= true;
-    drawClosureMask= true;
     ReferenceLongitude= [];
     ReferenceLatitude= [];
     Range= [];
@@ -31,19 +30,7 @@ C= zeros(commonGrid.Size,'single')+ reshape(oceanColor,1,1,3);
 if drawElevation
     Elevation= h5.read(h5filename,'/grid','elevation');
 
-    [GX,GY]= gradient(Elevation);
-
-    GX= GX/111000*1200;
-    GY= GY/111000*1200;
-
-    Normal= cat(3,-GX,-GY,ones(size(Elevation)));
-    Normal= Normal./sqrt(sum(Normal.^2,3));
-
-    sunVector= [-1 1 1];
-    sunVector= sunVector/norm(sunVector);
-
-    illumination= sum(Normal.*reshape(sunVector,1,1,3),3);
-    illumination(illumination < 0)= 0;
+    illumination= plt.topographyShading(Elevation);
     
     illuminationImage= addLayer(C,.4+.5*illumination);
 end
@@ -52,12 +39,6 @@ end
 %% Interferogram
 
 Stack= io.loadStack(h5filename,Flag,Mission,Track,PrimaryDate,SecondaryDate);
-
-if drawClosureMask
-    closureMask= io.loadClosureMask(h5filename,Mission,Track,PrimaryDate,SecondaryDate);
-    
-    Stack(closureMask)= nan;
-end
 
 if isempty(Range)
     Range= 100*[-1 1];
@@ -69,7 +50,7 @@ else
 end
 interferogramImage= plt.toColorSimple(Stack,single(plt.colormap2('redblue')),Range,backgroundColor);
 
-C= addLayer(illuminationImage,interferogramImage,.8);
+C= plt.utils.addLayer(illuminationImage,interferogramImage,.8);
 
 
 
@@ -83,23 +64,8 @@ plt.colormap2('redblue','Axis',gca,'Range',Range)
 xlim(commonGrid.LongLim)
 ylim(commonGrid.LatLim)
 
-xticks(floor(commonGrid.LongLim(1)):ceil(commonGrid.LongLim(2)))
-yticks(floor(commonGrid.LatLim(1)):ceil(commonGrid.LatLim(2)))
+plt.utils.latLongTicks
 
-XTICKS= xticks;
-XTICKLABELS= "";
-for i= 1:length(XTICKS)
-    if sign(XTICKS(i)) < 0; dir= 'W'; else; dir= 'E'; end
-    XTICKLABELS(i)= strcat(string(abs(XTICKS(i))),char(176),dir);
-end
-YTICKS= yticks;
-YTICKLABELS= "";
-for i= 1:length(YTICKS)
-    if sign(YTICKS(i)) < 0; dir= 'S'; else; dir= 'N'; end
-    YTICKLABELS(i)= strcat(string(abs(YTICKS(i))),char(176),dir);
-end
-xticklabels(XTICKLABELS)
-yticklabels(YTICKLABELS)
 grid on
 % set(gca,'GridColor',[0 0 0],'GridAlpha',1,'GridLineWidth',1)
 
@@ -129,47 +95,5 @@ end
 
 end
 
-
-
-
-%% Add Transparent Layer 
-
-function C= addLayer(C1,C2,Alpha)
-
-arguments
-    C1
-    C2
-    Alpha= [];
-end
-
-if all(size(C1,[1 2]) == [1 1])
-    C1= repmat(C1,size(C2,1),size(C2,2));
-end
-
-if size(C1,3) == 1 & size(C2,3) == 3
-    C1= repmat(C1,1,1,3);
-elseif size(C1,3) == 3 & size(C2,3) == 1
-    C2= repmat(C2,1,1,3);
-end
-
-Inan1= isnan(C1);
-Inan2= isnan(C2);
-
-C= nan(size(C1));
-
-I= Inan1 & ~Inan2;
-C(I)= C2(I);
-
-I= ~Inan1 & Inan2;
-C(I)= C1(I);
-
-I= ~Inan1 & ~Inan2;
-if ~isempty(Alpha)
-C(I)= C1(I)*(1-Alpha)+ C2(I)*Alpha;
-else
-    C(I)= C2(I);
-end
-
-end
 
 
