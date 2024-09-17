@@ -11,6 +11,8 @@ switch Flag
         basepath= '/interferogram/L2-closureCorrected';
     case 'L3'
         basepath= '/timeseries/L3-displacement';
+    case 'SBAS'
+        basepath= '/timeseries/L3-displacement';
     otherwise
         error('Flag not found')
 end
@@ -24,8 +26,13 @@ switch Flag
        path= fullfile(basepath,trackstr);
 end
 
-primaryDate= h5.read(filename,path,'primaryDate');
-secondaryDate= h5.read(filename,path,'secondaryDate');
+if strcmpi(Flag,"L3") || strcmpi(Flag,"SBAS")
+    primaryDate= h5.read(filename,path,'date');
+    secondaryDate= [];
+else
+    primaryDate= h5.read(filename,path,'primaryDate');
+    secondaryDate= h5.read(filename,path,'secondaryDate');
+end
 
 end
 

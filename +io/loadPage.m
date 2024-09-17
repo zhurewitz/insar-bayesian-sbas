@@ -5,7 +5,7 @@ function [Page,Grid,PrimaryDate,SecondaryDate]= loadPage(...
 
 arguments
     h5filename
-    Flag {mustBeMember(Flag,["L1","L2","closureMask","L3"])}
+    Flag {mustBeMember(Flag,["L1","L2","closureMask","L3","SBAS"])}
     Mission
     Track
     k= 1;
@@ -27,7 +27,11 @@ if isempty(PrimaryDates)
 end
 
 PrimaryDate= PrimaryDates(k);
-SecondaryDate= SecondaryDates(k);
+if strcmpi(Flag,"L3") || strcmpi(Flag,"SBAS")
+    SecondaryDate= [];
+else
+    SecondaryDate= SecondaryDates(k);
+end
 
 switch Flag
     case "L1"
@@ -42,6 +46,9 @@ switch Flag
     case "L3"
         basepath= '/timeseries/L3-displacement';
         name= 'data';
+    case "SBAS"
+        basepath= '/timeseries/L3-displacement';
+        name= 'SBAS';
     otherwise
         error('Level flag not supported')
 end

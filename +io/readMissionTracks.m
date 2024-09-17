@@ -11,6 +11,8 @@ switch Flag
         path= '/interferogram/L2-closureCorrected';
     case 'L2'
         path= '/interferogram/L2-closureCorrected';
+    case 'L3'
+        path= '/timeseries/L3-displacement';
     otherwise
         error('Flag not found')
 end
