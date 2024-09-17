@@ -4,6 +4,21 @@
 
 function selectUNRStations(workdir,LatLim,LongLim)
 
+arguments
+    workdir
+    LatLim= [];
+    LongLim= [];
+end
+
+if isempty(LatLim)
+    [LongLim,LatLim]= utils.loadBoundingBox(workdir);
+end
+
+GNSSdir= fullfile(workdir,"GNSS");
+if ~exist(GNSSdir,'dir')
+    mkdir(GNSSdir)
+end
+
 % Plot
 displayBoundingBox(workdir,LatLim,LongLim);
 
