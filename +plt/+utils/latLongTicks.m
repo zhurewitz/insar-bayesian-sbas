@@ -11,7 +11,7 @@ XLIM= xlim;
 YLIM= ylim;
 
 xticks(xinc*(floor(XLIM(1)/xinc):ceil(XLIM(2)/xinc)))
-Yticks(yinc*(floor(YLIM(1)/yinc):ceil(YLIM(2)/yinc)))
+yticks(yinc*(floor(YLIM(1)/yinc):ceil(YLIM(2)/yinc)))
 
 XTICKS= xticks;
 XTICKLABELS= "";

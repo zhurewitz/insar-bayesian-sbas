@@ -1,6 +1,6 @@
 %% Plot Displacement
 
-function [h,c,illuminationImage,Text]= plotDisplacement( ...
+function [h,c,illuminationImage,Text]= plotTroposphere( ...
     L3filename,Mission,Track,k,Range)
 
 arguments
@@ -21,14 +21,29 @@ if isempty(Track)
     Track= Tracks(1);
 end
 
+[Page1,commonGrid,Date]= io.loadPage(L3filename,"L3",Mission,Track,k);
+Page2= io.loadPage(L3filename,"SBAS",Mission,Track,k);
+Page= Page2-Page1;
+
+
+
+%% Elevation
+
+% Background color
+oceanColor= single([.6 .6 .6]);
+C= zeros(commonGrid.Size,'single')+ reshape(oceanColor,1,1,3);
+
+Elevation= h5.read(L3filename,'/grid','elevation');
+
+illumination= plt.topographyShading(Elevation);
+
+illuminationImage= plt.utils.addLayer(C,.4+.5*illumination);
+
+
 
 %% Image
 
-[Page,commonGrid,Date]= io.loadPage(L3filename,"L3",Mission,Track,k);
-
 interferogramImage= plt.toColorSimple(Page,single(plt.colormap2('redblue')),Range,nan);
-
-illuminationImage= plt.backgroundIllumination(L3filename);
 
 C= plt.utils.addLayer(illuminationImage,interferogramImage,.8);
 

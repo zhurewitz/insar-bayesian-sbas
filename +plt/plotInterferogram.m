@@ -32,7 +32,7 @@ if drawElevation
 
     illumination= plt.topographyShading(Elevation);
     
-    illuminationImage= addLayer(C,.4+.5*illumination);
+    illuminationImage= plt.utils.addLayer(C,.4+.5*illumination);
 end
 
 
