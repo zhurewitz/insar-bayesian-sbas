@@ -1,6 +1,6 @@
 %% H5.CHUNKSIZE
 
-function ChunkSize= chunkSize(filename,path,name)
+function [ChunkSize,Size]= chunkSize(filename,path,name)
 
 arguments
     filename
@@ -11,5 +11,7 @@ end
 S= h5info(filename,fullfile(path,name));
 
 ChunkSize= S.ChunkSize;
+
+Size= S.Dataspace.Size;
 
 end
