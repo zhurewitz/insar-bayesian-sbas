@@ -1,10 +1,12 @@
 %% Process Displacement Timeseries
 
-function processDisplacementTimeseries(L1filename,L3filename)
+function processDisplacementTimeseries(L1filename,L3filename,Bscale,tau)
 
 arguments
     L1filename
     L3filename= [];
+    Bscale= 10;
+    tau= 60/365;
 end
 
 if isempty(L3filename)
@@ -63,7 +65,7 @@ for m= 1:length(Missions)
 
                 % Estimate displacement timeseries from interferogram stack
                 [Optimizer,Date,ReferenceDate,PosteriorCovariance,SBASTimeseries]= ...
-                    flow.estimateDisplacementTimeseries(Stack,PrimaryDate,SecondaryDate);
+                    flow.estimateDisplacementTimeseries(Stack,PrimaryDate,SecondaryDate,Bscale,tau);
 
 
                 % Save timeseries
