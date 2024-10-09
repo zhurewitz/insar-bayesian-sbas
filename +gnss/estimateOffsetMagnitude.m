@@ -31,7 +31,7 @@ arguments
     Date
     Displacement
     OffsetDate
-    window= 20;
+    window= 30;
 end
 
 [~,j]= min(abs(Date- OffsetDate));
