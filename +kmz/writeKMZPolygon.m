@@ -28,7 +28,7 @@ if ~any(isnan(polyLong))
     coords= [polyLong; polyLat; zeros(size(polyLong))];
 
     % Format coordinate string
-    coordstr= sprintf("%g,%g,%g ",coords);
+    coordstr= sprintf("%0.15f,%0.15f,%0.15f ",coords);
 
     % Add to struct
     Document.Placemark.Polygon.outerBoundaryIs.LinearRing.coordinates= coordstr;
@@ -45,7 +45,7 @@ else
         coords= [polyLong(I); polyLat(I); zeros(1,length(I))];
 
         % Format coordinate string
-        coordstr= sprintf("%g,%g,%g ",coords);
+        coordstr= sprintf("%0.15f,%0.15f,%0.15f ",coords);
 
         % Add to struct
         Document.Placemark.MultiGeometry.Polygon(i).outerBoundaryIs.LinearRing.coordinates= coordstr;
