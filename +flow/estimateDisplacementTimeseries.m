@@ -1,7 +1,20 @@
 %% Estimate Displacement Timeseries
 
 function [Optimizer,Date,ReferenceDate,PosteriorCovariance,SBASTimeseries]= ...
-    estimateDisplacementTimeseries(Stack,PrimaryDate,SecondaryDate,Bscale,tau)
+    estimateDisplacementTimeseries(Stack,PrimaryDate,SecondaryDate,...
+    Bscale,tau,r_phase,r_trop,Afunc)
+
+arguments
+    Stack
+    PrimaryDate
+    SecondaryDate
+    Bscale
+    tau
+    r_phase= 0.5;
+    r_trop= 12;
+    Afunc= @(Date,ReferenceDate) ones(length(Date),1);
+end
+
 % Prepare Stack
 
 % SAR acquisition date (may be irregular)
@@ -35,16 +48,13 @@ flatStack= flatStack(:,Idata);
 
 %% Inversion Setup
 
-r_phase= 3.5; % mm
+% r_phase= .53; % mm
 % Numerical phase unwrapping noise. Estimated as the rms of the SBAS
-% inversion RMSE, which is 3.42 for grid 36.25,-119.75
-% Run miniGridSBAS_dev3, then rms(RMSE(:))
+% inversion RMSE
 
-r_trop= 20; % mm
+% r_trop= 12.5; % mm
 % Tropospheric and other physical noise at each SAR posting. Estimated as
 % std of the time-wise difference of the SBAS timeseries, over sqrt(2).
-% 19.95 for grid 36.25,-119.75
-% Run miniGridSBAS_dev3, then rms(diff(TSflat),'all')/sqrt(2)
 
 
 
@@ -53,10 +63,11 @@ Ndate= length(Date);
 t= years(Date- ReferenceDate);
 
 % Linear/seasonal trend matrix
-A= [t cos(2*pi*t)-1 sin(2*pi*t)];
+% A= [t cos(2*pi*t)-1 sin(2*pi*t)];
+A= Afunc(Date,ReferenceDate);
 
-% Bscale= 10; % mm - Covariance scale parameter
-% tau= 100/365; % yr - Timescale parameter
+% Bscale (mm) - Covariance scale parameter
+% tau (yr) - Timescale parameter
 tt= [0; t];
 B= Bscale^2*exp(-(tt-tt').^2/(2*tau^2));
 REL= [-1*ones(Ndate,1) eye(Ndate)];
