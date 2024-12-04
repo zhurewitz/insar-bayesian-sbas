@@ -29,23 +29,23 @@ T= readtable(filename,"FileType","text",'VariableNamingRule','preserve');
 
 Date= datetime(T.YYMMMDD,'InputFormat','yyMMMdd');
 
-EAST= T.('__east(m)')*1000; % mm
-NORTH= T.('_north(m)')*1000; % mm
-UP= T.('____up(m)')*1000; % mm
+EAST= T.("__east(m)")*1000; % mm
+NORTH= T.("_north(m)")*1000; % mm
+UP= T.("____up(m)")*1000; % mm
 
 Displacement= [EAST NORTH UP]; % mm
 
 if nargout >= 3
     % Standard deviations - Units meters
-    sx= T.('sig_e(m)');
-    sy= T.('sig_n(m)');
-    sz= T.('sig_u(m)');
+    sx= T.("sig_e(m)");
+    sy= T.("sig_n(m)");
+    sz= T.("sig_u(m)");
     
     % Pearson correlation coefficients - unitless
     % https://en.wikipedia.org/wiki/Pearson_correlation_coefficient#For_a_population
-    pxy= T.('_corr_en');
-    pxz= T.('_corr_eu');
-    pyz= T.('_corr_nu');
+    pxy= T.("__corr_en");
+    pxz= T.("__corr_eu");
+    pyz= T.("__corr_nu");
 
     % Covariance matrix [Cxx Cyy Czz Cxy Cxz Cyz] - Units mm^2
     Covariance= [sx.^2 sy.^2 sz.^2 pxy.*sx.*sy pxz.*sx.*sz pyz.*sy.*sz]*1000^2;
