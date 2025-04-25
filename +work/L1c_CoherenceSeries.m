@@ -1,34 +1,44 @@
+%% WORK.L1C_COHERENCESERIES
+% Temporal coherence statistics
 
-load input.mat workdir
+function OutputFile= L1c_CoherenceSeries(workdir,Plot)
+
+arguments
+    workdir= [];
+    Plot= true;
+end
 
 InputFile= fullfile(workdir,"L1coherence.h5");
 OutputFile= fullfile(workdir,"L1coherenceStatisticsSeries.mat");
 
-CoherenceFile= fullfile(workdir,"L1CoherenceMask");
+CoherenceMaskFile= fullfile(workdir,"L1CoherenceMask.mat");
 
-load(CoherenceFile,"CoherenceMask")
+if ~exist(CoherenceMaskFile,'file')
+    error("Coherence mask file %s does not exist",CoherenceMaskFile)
+end
+try
+    load(CoherenceMaskFile,"CoherenceMask")
+catch ME
+    error("Could not find variable CoherenceMask in file %s",CoherenceMaskFile)
+end
 
-
-%%
-[ChunkCount,ChunkSize,Size]= d3.chunkInfo(InputFile);
-
-Ninf= Size(3);
+Size= size(CoherenceMask);
 
 [~,~,DatePairs]= d3.readXYZ(InputFile);
 
 work.saveVariableMATFile(OutputFile,"DatePairs",DatePairs)
 
+if Plot
+    h= imagesc(nan(Size(1:2)));
+    setOptions
+    c= colorbar;
+    c.Label.String= "Coherence";
+    clim([.7 1])
+end
 
-
-%%
-figure(1)
-h= imagesc(nan(Size(1:2)));
-setOptions
-c= colorbar;
-c.Label.String= "Coherence";
-clim([.7 1])
 
 tic
+Ninf= height(DatePairs);
 for k= 1:Ninf
     CoherencePage= d3.readPage(InputFile,k);
     
@@ -65,24 +75,15 @@ for k= 1:Ninf
     work.saveVariableMATFile(OutputFile,"P30",P30,k)
     work.saveVariableMATFile(OutputFile,"P90",P90,k)
 
-
-    h.CData= CoherencePage;
-    drawnow
+    if Plot
+        h.CData= CoherencePage;
+        drawnow
+    end
     
     fprintf("Calculated coherence statistics for interferogram %d/%d. Elapsed time %0.1f min\n", ...
             k,Ninf,toc/60)
 end
 
 
-%%
 
-load(OutputFile)
-
-
-figure(2)
-scatter(mean(DatePairs,2),days(diff(DatePairs,1,2)),50,1-Fraction9,'filled')
-setOptions
-c= colorbar;
-c.Label.String= "Fraction of Coherence < 0.9";
-clim([0 .1])
-
+end
