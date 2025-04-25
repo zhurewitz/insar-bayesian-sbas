@@ -93,13 +93,6 @@ for k= 1:Ninf
     end
     
     % ***HARD CODE ALERT***
-    if days(diff(DatePairs(k,:))) > 200
-        fprintf("Interferogram %d/%d exceeds 200 day baseline limit. Elapsed time %0.1f min\n", ...
-        k,Ninf,toc/60)
-        continue
-    end
-    
-    % ***HARD CODE ALERT***
     if Fraction9(k) < .9
         fprintf("Interferogram %d/%d does not meet coherence criteria. Elapsed time %0.1f min\n", ...
         k,Ninf,toc/60)
@@ -128,9 +121,9 @@ for k= 1:Ninf
     % Save Interferogram
     d3.writePage(InterferogramFile,Interferogram2,count,GridLong,GridLat,DatePairs(k,:),ChunkSize)
     
-    RefTS= saveVariableMATFile(OutputFile,"ReferenceValue",ReferenceValue,count);
-    PrimaryDate= saveVariableMATFile(OutputFile,"PrimaryDate",DatePairs(k,1),count);
-    saveVariableMATFile(OutputFile,"SecondaryDate",DatePairs(k,2),count)
+    RefTS= work.saveVariableMATFile(OutputFile,"ReferenceValue",ReferenceValue,count);
+    PrimaryDate= work.saveVariableMATFile(OutputFile,"PrimaryDate",DatePairs(k,1),count);
+    work.saveVariableMATFile(OutputFile,"SecondaryDate",DatePairs(k,2),count)
     
     
     h.CData= Interferogram2;
