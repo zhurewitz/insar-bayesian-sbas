@@ -3,11 +3,21 @@
 % Citation: Blewitt 2018. https://doi.org/10.1029/2018EO104623
 % Full citation at above link or DOI
 
-function Station= downloadUNRStations
+function Station= downloadUNRStations(filename)
 
-UNRStationList= "http://geodesy.unr.edu/NGLStationPages/DataHoldings.txt";
+arguments
+    filename= "";
+end
 
-T= readtable(UNRStationList);
+if isempty(filename) || filename == "" || ~exist(filename,'file')
+    UNRStationList= "https://geodesy.unr.edu/NGLStationPages/DataHoldings.txt";
+    
+    options= weboptions("Timeout",30);
+    T= readtable(UNRStationList,"WebOptions",options);
+    
+else
+    T= readtable(filename);
+end
 
 Station= table;
 Station.ID= string(T.Var1);

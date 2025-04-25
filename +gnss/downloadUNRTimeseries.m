@@ -23,9 +23,11 @@
 
 function [Date, Displacement, Covariance]= downloadUNRTimeseries(ID)
 
-filename= strcat("http://geodesy.unr.edu/gps_timeseries/tenv3/IGS14/", ID, ".tenv3");
+filename= strcat("https://geodesy.unr.edu/gps_timeseries/tenv3/IGS14/", ID, ".tenv3");
 
-T= readtable(filename,"FileType","text",'VariableNamingRule','preserve');
+options= weboptions("Timeout",30);
+
+T= readtable(filename,"FileType","text",'VariableNamingRule','preserve','WebOptions',options);
 
 Date= datetime(T.YYMMMDD,'InputFormat','yyMMMdd');
 
