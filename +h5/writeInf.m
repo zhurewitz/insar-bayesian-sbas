@@ -13,10 +13,6 @@ arguments
     ChunkSize= 1000;
 end
 
-if ~h5.exist(filename)
-    error('File does not exist')
-end
-
 % Ensure text data is in string format
 if ischar(data) || iscellstr(data) %#ok<ISCLSTR>
     data= string(data);
@@ -64,7 +60,7 @@ end
 
 %% Create and Write
 
-if ~h5.exist(filename,path,name)
+if ~h5.exist(filename) || ~h5.exist(filename,path,name)
     h5create(filename,fullfile(path,name),Inf,...
         ChunkCell{:},DataTypeCell{:},FillCell{:})
 end

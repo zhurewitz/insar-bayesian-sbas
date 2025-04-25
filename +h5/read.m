@@ -11,7 +11,10 @@ end
 
 if ~isempty(data) && isstring(data)
     try 
-        data= datetime(data,'InputFormat','yyyy-MM-dd');
+        datatmp= h5.toDate(data);
+        if ~isempty(datatmp)
+            data= datatmp;
+        end
     catch
     end
 end

@@ -26,7 +26,7 @@ if ~h5.exist(filename) || ~h5.exist(filename,path,name)
 end
 
 if isdatetime(data)
-    data= string(data,'yyyy-MM-dd');
+    data= h5.dateString(data);
 end
 
 h5write(filename,fullfile(path,name),data)

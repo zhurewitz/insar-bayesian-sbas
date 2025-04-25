@@ -1,6 +1,6 @@
 %% H5.CHUNKCOUNT
 
-function Chunks= chunkCount(filename,path,name)
+function [Chunks,ChunkSize,Size]= chunkCount(filename,path,name)
 
 arguments
     filename
