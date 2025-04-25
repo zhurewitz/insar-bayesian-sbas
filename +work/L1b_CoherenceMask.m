@@ -12,8 +12,8 @@ OutputFile= fullfile(workdir,"L1coherenceStatistics.mat");
 [GridLong,GridLat,~]= d3.readXYZ(InputFile);
 
 
-saveVariableMATFile(OutputFile,"GridLat",GridLat)
-saveVariableMATFile(OutputFile,"GridLong",GridLong)
+work.saveVariableMATFile(OutputFile,"GridLat",GridLat)
+work.saveVariableMATFile(OutputFile,"GridLong",GridLong)
 
 %%
 figure(1)
@@ -46,15 +46,15 @@ for j= 1:ChunkCount(1)
         P90= prctile(CoherenceStack,90,3);
 
         % Save 
-        saveChunkMATFile2(OutputFile,"MeanCoherence",MeanCoherence,j,i,ChunkSize,Size);
-        saveChunkMATFile2(OutputFile,"MedianCoherence",MedianCoherence,j,i,ChunkSize,Size)
-        saveChunkMATFile2(OutputFile,"StdCoherence",StdCoherence,j,i,ChunkSize,Size)
-        saveChunkMATFile2(OutputFile,"Fraction5",Fraction5,j,i,ChunkSize,Size)
-        saveChunkMATFile2(OutputFile,"Fraction7",Fraction7,j,i,ChunkSize,Size)
-        Data= saveChunkMATFile2(OutputFile,"Fraction9",Fraction9,j,i,ChunkSize,Size);
-        saveChunkMATFile2(OutputFile,"P10",P10,j,i,ChunkSize,Size)
-        saveChunkMATFile2(OutputFile,"P30",P30,j,i,ChunkSize,Size)
-        saveChunkMATFile2(OutputFile,"P90",P90,j,i,ChunkSize,Size)
+        work.saveChunkMATFile2(OutputFile,"MeanCoherence",MeanCoherence,j,i,ChunkSize,Size);
+        work.saveChunkMATFile2(OutputFile,"MedianCoherence",MedianCoherence,j,i,ChunkSize,Size)
+        work.saveChunkMATFile2(OutputFile,"StdCoherence",StdCoherence,j,i,ChunkSize,Size)
+        work.saveChunkMATFile2(OutputFile,"Fraction5",Fraction5,j,i,ChunkSize,Size)
+        work.saveChunkMATFile2(OutputFile,"Fraction7",Fraction7,j,i,ChunkSize,Size)
+        Data= work.saveChunkMATFile2(OutputFile,"Fraction9",Fraction9,j,i,ChunkSize,Size);
+        work.saveChunkMATFile2(OutputFile,"P10",P10,j,i,ChunkSize,Size)
+        work.saveChunkMATFile2(OutputFile,"P30",P30,j,i,ChunkSize,Size)
+        work.saveChunkMATFile2(OutputFile,"P90",P90,j,i,ChunkSize,Size)
 
         h.CData= Data;
         drawnow
