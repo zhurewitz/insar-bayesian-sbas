@@ -2,12 +2,12 @@
 % Convert values to colors using a colormap
 % Originally x2rgb
 
-function [C, Inan]= toColorSimple(X,cmap,range,nanColor)
+function [C, Inan]= toColorSimple(X,cmap,Range,nanColor)
 
 arguments
     X
     cmap= [];
-    range= [];
+    Range= [];
     nanColor= .8;
 end
 
@@ -15,8 +15,8 @@ end
 if isempty(cmap)
     cmap= parula;
 end
-if isempty(range)
-    range= [min(X,[],'all','omitnan') max(X,[],'all','omitnan')];
+if isempty(Range)
+    Range= [min(X,[],'all','omitnan') max(X,[],'all','omitnan')];
 end
 if isscalar(nanColor)
     nanColor= nanColor+ [0 0 0];
@@ -34,7 +34,7 @@ Inan= isnan(X);
 X= X(~Inan);
 
 % Index within colormap
-I= ceil((X-range(1))*height(cmap)/diff(range));
+I= ceil((X-Range(1))*height(cmap)/diff(Range));
 
 % Saturate ends
 I= max(1,min(Ncmap,I)); 
