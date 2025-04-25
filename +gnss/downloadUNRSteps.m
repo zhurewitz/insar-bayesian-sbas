@@ -5,7 +5,7 @@
 
 function Step= downloadUNRSteps
 
-UNRStepFile= "http://geodesy.unr.edu/NGLStationPages/steps.txt";
+UNRStepFile= "https://geodesy.unr.edu/NGLStationPages/steps.txt";
 
 S= readlines(UNRStepFile);
 
