@@ -18,16 +18,20 @@ file1= fullfile(libraryPath,"templates","startUserInput.mlx");
 copyfile(file1,matlabProjectDir)
 
 % Step 2
-file2= fullfile(libraryPath,"templates","referenceAreaWorkflow.mlx");
+file2= fullfile(libraryPath,"templates","chooseGNSSStations.mlx");
 copyfile(file2,matlabProjectDir)
 
 % Step 3
-file3= fullfile(libraryPath,"templates","networkSelectionARIA.mlx");
+file3= fullfile(libraryPath,"templates","referenceAreaWorkflow.mlx");
 copyfile(file3,matlabProjectDir)
 
-% Step 4
-file4= fullfile(libraryPath,"templates","interferogramSpatialExtent.mlx");
+% Step 3
+file4= fullfile(libraryPath,"templates","networkSelectionARIA.mlx");
 copyfile(file4,matlabProjectDir)
+
+% Step 5
+file5= fullfile(libraryPath,"templates","interferogramSpatialExtent.mlx");
+copyfile(file5,matlabProjectDir)
 
 
 %% Open Step 1
