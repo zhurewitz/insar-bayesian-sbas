@@ -16,7 +16,7 @@ Ninf= Size(3);
 
 [~,~,DatePairs]= d3.readXYZ(InputFile);
 
-saveVariableMATFile(OutputFile,"DatePairs",DatePairs)
+work.saveVariableMATFile(OutputFile,"DatePairs",DatePairs)
 
 
 
@@ -55,15 +55,15 @@ for k= 1:Ninf
     P90= prctile(CoherencePage,90,'all');
     
     % Save
-    saveVariableMATFile(OutputFile,"MeanCoherence",MeanCoherence,k);
-    saveVariableMATFile(OutputFile,"MedianCoherence",MedianCoherence,k)
-    saveVariableMATFile(OutputFile,"StdCoherence",StdCoherence,k)
-    saveVariableMATFile(OutputFile,"Fraction5",Fraction5,k)
-    saveVariableMATFile(OutputFile,"Fraction7",Fraction7,k)
-    saveVariableMATFile(OutputFile,"Fraction9",Fraction9,k);
-    saveVariableMATFile(OutputFile,"P10",P10,k)
-    saveVariableMATFile(OutputFile,"P30",P30,k)
-    saveVariableMATFile(OutputFile,"P90",P90,k)
+    work.saveVariableMATFile(OutputFile,"MeanCoherence",MeanCoherence,k);
+    work.saveVariableMATFile(OutputFile,"MedianCoherence",MedianCoherence,k)
+    work.saveVariableMATFile(OutputFile,"StdCoherence",StdCoherence,k)
+    work.saveVariableMATFile(OutputFile,"Fraction5",Fraction5,k)
+    work.saveVariableMATFile(OutputFile,"Fraction7",Fraction7,k)
+    work.saveVariableMATFile(OutputFile,"Fraction9",Fraction9,k);
+    work.saveVariableMATFile(OutputFile,"P10",P10,k)
+    work.saveVariableMATFile(OutputFile,"P30",P30,k)
+    work.saveVariableMATFile(OutputFile,"P90",P90,k)
 
 
     h.CData= CoherencePage;
@@ -86,54 +86,3 @@ c= colorbar;
 c.Label.String= "Fraction of Coherence < 0.9";
 clim([0 .1])
 
-
-%%
-% 
-% I= ~any(isnat(DatePairs),2) & Fraction9>.9 & days(diff(DatePairs,1,2)) <= 200;
-% % I= ~any(isnat(DatePairs),2) & Fraction9>.95;
-% 
-% figure(3)
-% plotInterferogramNetwork(DatePairs(I,:))
-% setOptions
-% 
-% sum(I)
-% 
-% % interferogramNetworkIsConnected(DatePairs(I,:))
-% 
-% 
-% 
-% 
-% 
-% %%
-% 
-% load(OutputFile)
-% 
-% I= ~any(isnat(DatePairs),2);
-% 
-% DatePairs= DatePairs(I,:);
-% Fraction9= Fraction9(I);
-% 
-% PostingDate= unique(DatePairs);
-% 
-% y= 1-Fraction9;
-% 
-% Ninf= height(DatePairs);
-% Nposting= length(PostingDate);
-% 
-% K= zeros(Ninf,2);
-% for i= 1:Ninf
-%     K(i,1)= find(PostingDate == DatePairs(i,1),1);
-%     K(i,2)= find(PostingDate == DatePairs(i,2),1);
-% end
-% 
-% z= {};
-% for i= 1:Nposting   
-%     z{i}= y(any(K == i,2)); %#ok<SAGROW>
-% end
-% 
-% 
-% %%
-% 
-% [M,I]= maxk(cellfun(@(x) mean(x > .2),z),10);
-% 
-% [PostingDate(I-1) PostingDate(I)]
