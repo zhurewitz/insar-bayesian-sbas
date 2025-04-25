@@ -1,27 +1,36 @@
+%% WORK.L1B_SPATIALCOHERENCESTATISTICS
+% Generate spatial coherence statistics
 
-load input.mat workdir
+function OutputFile= L1b_SpatialCoherenceStatistics(workdir,Plot)
+
+arguments
+    workdir= [];
+    Plot= true;
+end
 
 InputFile= fullfile(workdir,"L1coherence.h5");
 OutputFile= fullfile(workdir,"L1coherenceStatistics.mat");
 
 
-%%
+%% Load Size Information
 
 [ChunkCount,ChunkSize,Size]= d3.chunkInfo(InputFile);
 
 [GridLong,GridLat,~]= d3.readXYZ(InputFile);
 
-
 work.saveVariableMATFile(OutputFile,"GridLat",GridLat)
 work.saveVariableMATFile(OutputFile,"GridLong",GridLong)
 
-%%
-figure(1)
-h= imagesc(nan(Size(1:2)));
-setOptions
-c= colorbar;
-c.Label.String= "Fraction of Coherence > 0.9";
-clim([0 1])
+
+%% Generate Coherence Statistics
+
+if Plot
+    h= imagesc(nan(Size(1:2)));
+    setOptions
+    c= colorbar;
+    c.Label.String= "Fraction of Coherence > 0.9";
+    clim([0 1])
+end
 
 tic
 for j= 1:ChunkCount(1)
@@ -29,6 +38,7 @@ for j= 1:ChunkCount(1)
         % Read data
         CoherenceStack= d3.readChunkStack(InputFile,j,i);
         
+        % Remove empty interferograms
         I= squeeze(~all(isnan(CoherenceStack),[1 2]));
         CoherenceStack= CoherenceStack(:,:,I);
 
@@ -56,31 +66,16 @@ for j= 1:ChunkCount(1)
         work.saveChunkMATFile2(OutputFile,"P30",P30,j,i,ChunkSize,Size)
         work.saveChunkMATFile2(OutputFile,"P90",P90,j,i,ChunkSize,Size)
 
-        h.CData= Data;
-        drawnow
+        if Plot
+            h.CData= Data;
+            drawnow
+        end
         
         fprintf("Calculated coherence statistics for tile %d/%d. Elapsed time %0.1f min\n", ...
             (j-1)*ChunkCount(2) + i,ChunkCount(1)*ChunkCount(2),toc/60)
     end
 end
 
-%%
-
-
-load(OutputFile)
-
-CoherenceMask= Fraction5>.9;
-% At least 90% of interferograms have coherences above 0.5
-
-figure(2)
-imagesc(GridLong,GridLat,CoherenceMask)
-setOptions
-colorbar
-
-save coherenceMask.mat GridLong GridLat CoherenceMask
-
-CoherenceFile= fullfile(workdir,"L1CoherenceMask");
-save(CoherenceFile,"GridLong","GridLat","CoherenceMask");
-
+end
 
 
