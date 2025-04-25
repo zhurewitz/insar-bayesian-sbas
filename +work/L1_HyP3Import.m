@@ -1,6 +1,7 @@
 %% L1 Processing - Save interferograms to stack
 
-load input.mat
+function [InterferogramFile,CoherenceFile]=...
+    L1_HyP3Import(datadir,workdir, Mission,Track,DateLim,LongLim,LatLim)
 
 ChunkSize= [200 200 1];
 
@@ -14,7 +15,6 @@ CoherenceFile= fullfile(workdir,"L1coherence.h5");
 commonGrid= utils.createGrid(LatLim,LongLim,1/1200);
 GridLong= commonGrid.Long;
 GridLat= commonGrid.Lat;
-Size= commonGrid.Size;
 clear commonGrid
 
 
@@ -48,7 +48,11 @@ Npairs= length(PrimaryDate);
 %% Import Interferograms
 
 if ~exist(workdir,'dir')
-    mkdir(workdir)
+    try
+        mkdir(workdir)
+    catch ME
+        error("Could not make work directory %s",workdir)
+    end
 end
 
 
@@ -74,6 +78,7 @@ for k= 1:Npairs
         frameTable.PrimaryDate == PrimaryDate(k) & ...
         frameTable.SecondaryDate == SecondaryDate(k), :);
     
+    % Import and stitch interferograms
     [LOS,COH]= io.hyp3.stitchInterferograms(frameNames,GridLong,GridLat);
     
     
@@ -93,11 +98,11 @@ for k= 1:Npairs
         k,Npairs,string(PrimaryDate(k)),string(SecondaryDate(k)),toc/60)
     
     if mod(k,10) == 0
-        fprintf("1 second pause\n")
-        pause(1)
+        fprintf("2 second pause\n")
+        pause(2)
     end
 end
 
 
-
+end
 
