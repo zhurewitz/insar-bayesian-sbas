@@ -6,6 +6,9 @@ GNSSDate= S.Date;
 GNSS= S.GNSSLOS71;
 GNSSUncertainty= S.GNSSLOS71Uncertainty;
 
+ReferenceID= readlines("referenceID.txt","EmptyLineRule","skip");
+
+
 GNSSInterp= GNSS;
 % Interpolate 
 for i= 1:Nstations
@@ -41,12 +44,7 @@ setOptions
 colorbar
 clim([.98 1])
 
-ReferenceID= ID(mean(~isnan(GNSS)) > .98);
-ReferenceID= setdiff(ReferenceID,["P595" "P594" "CCCC" "P580"]);
 
-% We select as reference stations all GNSS stations which have fewer than
-% 2% missing data points over the time period. We exclude the 5 stations
-% closest to the earthquake: P595, CCCC, TOWG, P594, and P580.
 
 [~,ia]= intersect(ID,ReferenceID);
 
@@ -83,42 +81,4 @@ load GNSS3LOS_cov.mat Ix Iy
 save GNSS4LOSdemean.mat GNSSDate GNSSReferenced ID StationLongitude StationLatitude
 save GNSS4LOSdemean.mat ReferenceID Ix Iy -append 
 
-
-
-
-%% WRITE Reference Stations
-
-ReferenceID= [
-    "CPBN"
-    "LNMT"
-    "P462"
-    "P464"
-    "P569"
-    "P579"
-    "P591"
-    "P592"
-    "P593"
-    "P596"
-    "P597"
-    "P615"
-    "P616"
-    "P617"
-    "RAMT"];
-
-writelines(ReferenceID,"referenceStations.txt")
-
-
-
-%% Old Reference Stations
-% CPBN
-% LNMT
-% P464
-% P569
-% P579
-% P591
-% P593
-% P594
-% P596
-% P597
-% RAMT
 
