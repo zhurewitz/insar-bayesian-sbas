@@ -34,6 +34,16 @@ metaData.TemporalBaseline= days(diff(dates,1,2));
 % Time direction
 metaData.TimeForward= timeForward;
 
+s= S(:,9);
+x= nan(Ninf,4);
+for i= 1:Ninf
+    x(i,:)= sscanf(s(i),"%f%c_%f%c")';
+end
+west= char(x(:,2)) == 'W';
+south= char(x(:,4)) == 'S';
+metaData.Longitude= x(:,1).*(-1).^west;
+metaData.Latitude= x(:,3).*(-1).^south;
+
 % Version number
 metaData.Version= S(:,12);
 
