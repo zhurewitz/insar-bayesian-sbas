@@ -1,8 +1,14 @@
 %% Level 2 Processing - Referencing
 
-ChunkSize= [200 200 1];
+function [InterferogramFile,OutputFile]= ...
+    L2b_Reference(workdir,fignum)
 
-load input.mat workdir
+arguments
+    workdir 
+    fignum= 0;
+end
+
+ChunkSize= [200 200 1];
 
 InputFile= fullfile(workdir,"L1interferogram.h5");
 InterferogramFile= fullfile(workdir,"L2referenced.h5");
@@ -22,7 +28,7 @@ load(CoherenceMaskFile,"CoherenceMask")
 
 % Load coherence series
 CoherenceSeriesFile= fullfile(workdir,"L1coherenceStatisticsSeries.mat");
-load(CoherenceSeriesFile,"Fraction9")
+load(CoherenceSeriesFile,"Fraction5") % HARD CODE ALERT
 
 
 
@@ -62,22 +68,26 @@ clear I R LONG LAT
 
 %% Referencing
 
-figure(1)
-tiledlayoutcompact
-h= imagesc(GridLong,GridLat,nan(Size));
-hold on
-scatter(StationLongitude,StationLatitude,100,'k','filled','Marker','diamond')
-scatter(ReferenceLong,ReferenceLat,30,'w','filled')
-hold off
-setOptions
-colorbar
-text(StationLongitude+.02,StationLatitude,ID,"FontSize",14,'FontName',"Times")
+if fignum > 0
+    figure(fignum)
+    clf
+    plt.tiledlayoutcompact
+    h= imagesc(GridLong,GridLat,nan(Size));
+    hold on
+    scatter(StationLongitude,StationLatitude,100,'k','filled','Marker','diamond')
+    scatter(ReferenceLong,ReferenceLat,30,'w','filled')
+    hold off
+    plt.pltOptions
+    colorbar
+    text(StationLongitude+.02,StationLatitude,ID,"FontSize",14,'FontName',"Times")
 
-nexttile
-h2= scatter(DatePairs(:,1),nan(Ninf,1),50,'k','filled');
-xlim([min(DatePairs(:)),max(DatePairs(:))])
-setOptions
-% ylim([-1 1]*100)
+    nexttile
+    h2= scatter(DatePairs(:,1),nan(Ninf,1),50,'k','filled');
+    xlim([min(DatePairs(:)),max(DatePairs(:))])
+    plt.pltOptions
+    box on
+
+end
 
 
 
@@ -93,7 +103,7 @@ for k= 1:Ninf
     end
     
     % ***HARD CODE ALERT***
-    if Fraction9(k) < .9
+    if Fraction5(k) < .7
         fprintf("Interferogram %d/%d does not meet coherence criteria. Elapsed time %0.1f min\n", ...
         k,Ninf,toc/60)
         continue
@@ -137,24 +147,5 @@ for k= 1:Ninf
 end
 
 
-%%
-
-load(OutputFile)
-
-figure(1)
-scatter(PrimaryDate,ReferenceValue,'filled')
-setOptions
-
-
-
-
-
-%%
-
-
-load coherenceMask.mat
-
-figure(2)
-imagesc(ReferenceArea+ 3*CoherenceMask)
-setOptions
+end
 
