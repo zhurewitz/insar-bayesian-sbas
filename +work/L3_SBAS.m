@@ -16,8 +16,8 @@ OutputFile= fullfile(workdir,"L3output.mat");
 [GridLong,GridLat,DatePairs]= d3.readXYZ(InputFile);
 
 
-saveVariableMATFile(OutputFile,"GridLong",GridLong)
-saveVariableMATFile(OutputFile,"GridLat",GridLat)
+work.saveVariableMATFile(OutputFile,"GridLong",GridLong)
+work.saveVariableMATFile(OutputFile,"GridLat",GridLat)
 
 
 
@@ -56,7 +56,7 @@ for j= 1:ChunkCount(1)
 
         % SBAS Inversion
         [PostingDate,SBASTimeseries,ReferenceDate,Residual,RMSE]= ...
-            postingSBASTimeseries(FlatStack,PrimaryDate,SecondaryDate);
+            work.postingSBASTimeseries(FlatStack,PrimaryDate,SecondaryDate);
 
         % Append reference date
         PostingDate= [ReferenceDate; PostingDate]; %#ok<AGROW>
@@ -71,7 +71,7 @@ for j= 1:ChunkCount(1)
         % Save SBAS Timeseries
         d3.writeChunkStack(SBASFile,SBASTimeseriesFull,j,i,GridLong,GridLat,PostingDate,ChunkSize)
         d3.writeChunkStack(ResidualFile,ResidualFull,j,i,GridLong,GridLat,DatePairs,ChunkSize)
-        RMSEPlot= saveChunkMATFile2(OutputFile,"RMSE",RMSEFull,j,i,ChunkSize,Size);
+        RMSEPlot= work.saveChunkMATFile2(OutputFile,"RMSE",RMSEFull,j,i,ChunkSize,Size);
         
         h.CData= RMSEPlot;
         drawnow
