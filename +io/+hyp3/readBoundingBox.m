@@ -2,9 +2,11 @@
 
 function BoundingBox= readBoundingBox(filename)
 
-[dir,name]= fileparts(filename);
+[dir,name,ext]= fileparts(filename);
 
-filename= fullfile(dir,name,strcat(name,'_unw_phase.tif'));
+if string(ext) ~= ".tif"
+    filename= fullfile(dir,name,strcat(name,'_unw_phase.tif'));
+end
 
 info= geotiffinfo(filename);
 crs= info.SpatialRef.ProjectedCRS;
