@@ -17,13 +17,14 @@
 % Unit Test: COLORLINE("test") performs a unit test displaying the
 % function's behaviour
 
-function h= colorLine(x,y,c,LineWidth)
+function h= colorLine(x,y,c,LineWidth,alpha)
 
 arguments
     x= [];
     y (:,1)= [];
     c= [];
     LineWidth= 5;
+    alpha= 1;
 end
 
 warning off
@@ -73,7 +74,7 @@ c= [c c; nan(1,2,size(c,3))];
 
 set(gcf,'Color','white')
 H= surface(x,y,zeros(size(y)),c,...
-    'EdgeColor','interp','FaceColor','none','LineWidth',LineWidth);
+    'EdgeColor','interp','FaceColor','none','LineWidth',LineWidth,'EdgeAlpha',alpha);
 view(0,90)
 set(gca,'FontSize',16,'FontName','Times')
 
