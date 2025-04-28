@@ -1,16 +1,7 @@
 %% Plot Interferogram Network
 
-function plotSpanningInterferograms(filelist)
-
-warning off
-metaTable= io.shortMetaData(filelist);
-warning on
-
-
+function plotSpanningInterferograms(PrimaryDate,SecondaryDate)
 %% Calculate Spanning Interferograms
-
-PrimaryDate= metaTable.PrimaryDate;
-SecondaryDate= metaTable.SecondaryDate;
 
 PostingDate= unique([PrimaryDate; SecondaryDate]);
 
