@@ -1,41 +1,44 @@
 %% L3 Processing - SBAS Timeseries
 
-load input.mat workdir
+function [SBASFile,ResidualFile,OutputFile]= L3_SBAS(workdir,fignum)
+
+arguments
+    workdir
+    fignum= 0;
+end
 
 InputFile= fullfile(workdir,"L2referenced.h5");
 SBASFile= fullfile(workdir,"L3SBAStimeseries.h5");
 ResidualFile= fullfile(workdir,"L3residual.h5");
 OutputFile= fullfile(workdir,"L3output.mat");
 
-
-%%
-
-
 [ChunkCount,ChunkSize,Size]= d3.chunkInfo(InputFile);
 
 [GridLong,GridLat,DatePairs]= d3.readXYZ(InputFile);
-
 
 work.saveVariableMATFile(OutputFile,"GridLong",GridLong)
 work.saveVariableMATFile(OutputFile,"GridLat",GridLat)
 
 
 
+
 %% Calculate SBAS Timeseries
 
-figure(1)
-h= imagesc(nan(Size(1:2)));
-setOptions
-colorbar
-clim([0 5])
-
+if fignum > 0
+    figure(fignum)
+    clf
+    h= imagesc(nan(Size(1:2)));
+    setOptions
+    colorbar
+    clim([0 5])
+end
 
 tic
 for j= 1:ChunkCount(1)
     for i= 1:ChunkCount(2)
         
         % Read interferogram stack
-        [SubStack,SubLong,SubLat,~]= d3.readChunkStack(InputFile,j,i);
+        [SubStack,~,~,~]= d3.readChunkStack(InputFile,j,i);
         
         if all(isnan(SubStack),'all')
             fprintf("Tile %d/%d is empty. Elapsed time %0.1f min\n", ...
@@ -73,25 +76,14 @@ for j= 1:ChunkCount(1)
         d3.writeChunkStack(ResidualFile,ResidualFull,j,i,GridLong,GridLat,DatePairs,ChunkSize)
         RMSEPlot= work.saveChunkMATFile2(OutputFile,"RMSE",RMSEFull,j,i,ChunkSize,Size);
         
-        h.CData= RMSEPlot;
-        drawnow
-        
+        if fignum > 0
+            h.CData= RMSEPlot;
+            drawnow
+        end
+
         fprintf("Calculated SBAS timeseries for tile %d/%d. Elapsed time %0.1f min\n", ...
             (j-1)*ChunkCount(2) + i,ChunkCount(1)*ChunkCount(2),toc/60)
     end
 end
 
-
-
-
-%%
-
-load(OutputFile)
-
-
-figure(2)
-h= imagesc(GridLong,GridLat,RMSE);
-setOptions
-colorbar
-clim([0 2])
-
+end
