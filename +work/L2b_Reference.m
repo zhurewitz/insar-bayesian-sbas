@@ -26,11 +26,6 @@ Ninf= height(DatePairs);
 CoherenceMaskFile= fullfile(workdir,"L1CoherenceMask");
 load(CoherenceMaskFile,"CoherenceMask")
 
-% Load coherence series
-CoherenceSeriesFile= fullfile(workdir,"L1coherenceStatisticsSeries.mat");
-load(CoherenceSeriesFile,"Fraction5") % HARD CODE ALERT
-
-
 
 
 %% Construct Reference Area
@@ -94,23 +89,15 @@ end
 tic
 count= 1;
 for k= 1:Ninf
-    % REJECT INTERFEROGRAMS
-    
+    % Reject missing interferograms
     if any(isnat(DatePairs(k,:)),2)
         fprintf("No data for interferogram %d/%d. Elapsed time %0.1f min\n", ...
         k,Ninf,toc/60)
         continue
     end
     
-    % ***HARD CODE ALERT***
-    if Fraction5(k) < .7
-        fprintf("Interferogram %d/%d does not meet coherence criteria. Elapsed time %0.1f min\n", ...
-        k,Ninf,toc/60)
-        continue
-    end
     
-    
-    % Load Interferogram
+    % Load interferogram
     Interferogram= d3.readPage(InputFile,k);
     
     % No data
@@ -121,16 +108,17 @@ for k= 1:Ninf
     end
     
     
-    % APPLY COHERENCE MASK
+    % Apply coherence mask
     Interferogram(~CoherenceMask)= nan;
 
-    % Reference Interferogram
+    % Reference interferogram
     ReferenceValue= mean(Interferogram(ReferenceArea),'omitmissing');
     Interferogram2= Interferogram- ReferenceValue;
     
-    % Save Interferogram
+    % Save interferogram
     d3.writePage(InterferogramFile,Interferogram2,count,GridLong,GridLat,DatePairs(k,:),ChunkSize)
     
+    % Save reference Valye
     RefTS= work.saveVariableMATFile(OutputFile,"ReferenceValue",ReferenceValue,count);
     PrimaryDate= work.saveVariableMATFile(OutputFile,"PrimaryDate",DatePairs(k,1),count);
     work.saveVariableMATFile(OutputFile,"SecondaryDate",DatePairs(k,2),count)
