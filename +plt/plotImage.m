@@ -23,8 +23,10 @@ hhandle= image(GridLong,GridLat,C);
 plt.pltOptions
 chandle= colorbar;
 plt.colormap2(cmap,'Axis',gca,'Range',Range)
-xlim(GridLong([1 end]))
-ylim(GridLat([1 end]))
+dL= diff(GridLong(1:2));
+xlim(GridLong([1 end])+ [0 dL]')
+ylim(GridLat([1 end])+ [0 dL]')
+daspect([1 cosd(mean(GridLat)) 1])
 
 plt.utils.latLongTicks
 
