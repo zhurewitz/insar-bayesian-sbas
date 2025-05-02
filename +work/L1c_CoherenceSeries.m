@@ -65,6 +65,7 @@ for k= 1:Ninf
     P90= prctile(CoherencePage,90,'all');
     
     % Save
+    work.saveVariableMATFile(OutputFile,"Pixels",Npix,k);
     work.saveVariableMATFile(OutputFile,"MeanCoherence",MeanCoherence,k);
     work.saveVariableMATFile(OutputFile,"MedianCoherence",MedianCoherence,k)
     work.saveVariableMATFile(OutputFile,"StdCoherence",StdCoherence,k)
