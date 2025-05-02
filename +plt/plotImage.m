@@ -1,11 +1,12 @@
 %% Plot Displacement
 
-function [h,c]= plotImage(Z,illuminationImage,commonGrid,cmap,Range)
+function [h,c]= plotImage(GridLong,GridLat,Z,illuminationImage,cmap,Range)
 
 arguments
+    GridLong
+    GridLat
     Z
     illuminationImage
-    commonGrid
     cmap= [];
     Range= [-100 100];
 end
@@ -18,15 +19,25 @@ IM= plt.toColorSimple(Z,single(cmap),Range,nan);
 
 C= plt.utils.addLayer(illuminationImage,IM,.8);
 
-h= image(commonGrid.Long,commonGrid.Lat,C);
+hhandle= image(GridLong,GridLat,C);
 plt.pltOptions
-c= colorbar;
+chandle= colorbar;
 plt.colormap2(cmap,'Axis',gca,'Range',Range)
-xlim(commonGrid.LongLim)
-ylim(commonGrid.LatLim)
+xlim(GridLong([1 end]))
+ylim(GridLat([1 end]))
 
 plt.utils.latLongTicks
 
 grid on
+
+
+if nargout > 0
+    h= hhandle;
+end
+
+if nargout > 1
+    c= chandle;
+end
+
 
 end
