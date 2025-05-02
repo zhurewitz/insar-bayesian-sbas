@@ -1,23 +1,23 @@
+%% WORK.L3C_SBASCOVARIANCE
+% Covariance of the SBAS inversion
 
-load input.mat workdir
+function L3c_SBASCovariance(workdir)
 
-
-L2filename= fullfile(workdir,'L2referenced.h5');
+inputFilename= fullfile(workdir,'L3cut.h5');
 L3OutputFile= fullfile(workdir,'L3output.mat');
 L3RMSEMaskFile= fullfile(workdir,'L3_RMSEMask.mat');
 OutputFile= fullfile(workdir,"L3_SBASCovariance.mat");
 
 
-
 %% Load
 
-[~,~,DatePairs]= d3.readXYZ(L2filename);
+[~,~,DatePairs]= d3.readXYZ(inputFilename);
 
 load(L3OutputFile,"RMSE")
 load(L3RMSEMaskFile,"RMSEMask")
 
 
-%% 
+%% Calculate Covariance
 
 % Mask out pixels by RMSE
 RMSE(~RMSEMask)= nan;
@@ -46,16 +46,4 @@ SBASCovariance= [0 zeros(1,Nposting-1); zeros(Nposting-1,1) SBASCovariance];
 save(OutputFile,"SBASCovariance","PostingDate")
 
 
-%%
-
-load(OutputFile)
-
-figure(1)
-pcolor(PostingDate,PostingDate,SBASCovariance)
-shading flat
-setOptions
-
-
-figure(2)
-plot(PostingDate,sqrt(diag(SBASCovariance)))
-setOptions
+end
