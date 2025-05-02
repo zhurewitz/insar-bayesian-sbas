@@ -3,12 +3,21 @@
 function latLongTicks(xinc,yinc)
 
 arguments
-    xinc= 1;
-    yinc= 1;
+    xinc= [];
+    yinc= [];
 end
 
 XLIM= xlim;
 YLIM= ylim;
+
+if isempty(xinc)
+    xinc= tickIncrement(diff(xlim));
+end
+
+if isempty(yinc)
+    yinc= tickIncrement(diff(ylim));
+end
+
 
 xticks(xinc*(floor(XLIM(1)/xinc):ceil(XLIM(2)/xinc)))
 yticks(yinc*(floor(YLIM(1)/yinc):ceil(YLIM(2)/yinc)))
@@ -27,5 +36,27 @@ for i= 1:length(YTICKS)
 end
 xticklabels(XTICKLABELS)
 yticklabels(YTICKLABELS)
+
+end
+
+
+function inc= tickIncrement(n)
+
+b= 10^floor(log10(n));
+a= n/b;
+
+if a < 1.5
+    ainc= .25;
+elseif a < 3
+    ainc= .5;
+elseif a <= 5
+    ainc= 1;
+elseif a <= 8
+    ainc= 2;
+else
+    ainc= 2.5;
+end
+
+inc= ainc*b;
 
 end
