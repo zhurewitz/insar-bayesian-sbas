@@ -9,7 +9,7 @@ end
 ChunkSize= [200 200 1];
 
 InputFile= fullfile(workdir,"L2referenced.h5");
-CutFile= fullfile(workdir,"L3datePairsCutAutomatic.mat");
+CutFile= fullfile(workdir,"L3datePairsCut.mat");
 InterferogramFile= fullfile(workdir,"L3cut.h5");
 
 

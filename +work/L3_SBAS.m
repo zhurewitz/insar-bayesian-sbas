@@ -7,7 +7,7 @@ arguments
     fignum= 0;
 end
 
-InputFile= fullfile(workdir,"L2referenced.h5");
+InputFile= fullfile(workdir,"L3cut.h5");
 SBASFile= fullfile(workdir,"L3SBAStimeseries.h5");
 ResidualFile= fullfile(workdir,"L3residual.h5");
 OutputFile= fullfile(workdir,"L3output.mat");
