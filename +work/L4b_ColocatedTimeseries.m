@@ -1,13 +1,14 @@
 %% L4b Processing - InSAR Timeseries Colocated with GNSS Stations
 
 
-load input.mat workdir
+function L4b_ColocatedTimeseries(workdir)
 
 filename= fullfile(workdir,"L4SBASreferenced.h5");
 OutputFilename= fullfile(workdir,"L4_ColocatedInSAR.mat");
 
 
-%%
+%% Read colocated timeseries
+
 [GridLong,GridLat,PostingDate]= d3.readXYZ(filename);
 Nposting= length(PostingDate);
 
@@ -34,20 +35,7 @@ end
 save(OutputFilename,"ColocatedTimeseries","ID","StationLongitude","StationLongitude","PostingDate")
 
 
-
-%%
-
-load GNSS4LOSdemean.mat GNSSDate GNSSReferenced
-load(OutputFilename)
-
-figure(1)
-plot(GNSSDate,GNSSReferenced,'k')
-hold on
-plot(PostingDate,ColocatedTimeseries)
-hold off
-setOptions
-
-
+end
 
 
 
