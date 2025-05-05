@@ -1,6 +1,13 @@
 %% L4 Processing - Temporally Referencing the SBAS Timeseries
 
-load input.mat workdir
+function L4_TReference(workdir,parameterFunction,Plot)
+
+arguments
+    workdir 
+    parameterFunction 
+    Plot= false;
+end
+
 
 InputFile= fullfile(workdir,"L3SBAStimeseries.h5");
 MaskFile= fullfile(workdir,"L3_RMSEMask.mat");
@@ -21,8 +28,8 @@ load(MaskFile,"RMSEMask")
 [GridLong,GridLat,PostingDate]= d3.readXYZ(InputFile);
 
 
-saveVariableMATFile(OutputFile,"GridLong",GridLong)
-saveVariableMATFile(OutputFile,"GridLat",GridLat)
+work.saveVariableMATFile(OutputFile,"GridLong",GridLong)
+work.saveVariableMATFile(OutputFile,"GridLat",GridLat)
 
 
 
@@ -32,15 +39,19 @@ saveVariableMATFile(OutputFile,"GridLat",GridLat)
 
 %% Reference SBAS Timeseries
 
-A= utils.parameterMatrix2(PostingDate,1,1,1,0,0,datetime(2015,1,1),1.8);
+A= parameterFunction(PostingDate);
+
+ConstantIndex= find(all(A == 1), 1);
 
 
-figure(1)
-h= imagesc(GridLong,GridLat,nan(Size(1:2)));
-setOptions
-c= colorbar;
-c.Label.String= "Velocity (mm/yr)";
-clim([-3 3])
+if Plot
+    clf
+    h= imagesc(GridLong,GridLat,nan(Size(1:2)));
+    setOptions
+    c= colorbar;
+    c.Label.String= "Velocity (mm/yr)";
+    clim([-3 3])
+end
 
 tic
 for j= 1:ChunkCount(1)
@@ -68,11 +79,8 @@ for j= 1:ChunkCount(1)
         [ParametersFlat,~,ResidualFlat,RMSEFlat]= utils.fitParams(SBASTimeseriesFlat,A);
         
         % Unflatten 
-        Parameters= single(utils.unflatten(ParametersFlat,SubSize,Iflat));
-        VelocityChunk= Parameters(:,:,1);
-        ConstantChunk= Parameters(:,:,2);
-        CoseismicChunk= Parameters(:,:,3);
-        PostSeismicChunk= Parameters(:,:,4);
+        ParametersChunk= single(utils.unflatten(ParametersFlat,SubSize,Iflat));
+        ConstantChunk= ParametersChunk(:,:,ConstantIndex);
         Residual= single(utils.unflatten(ResidualFlat,SubSize,Iflat));
         RMSEChunk= single(utils.unflatten(RMSEFlat,SubSize,Iflat));
 
@@ -82,12 +90,8 @@ for j= 1:ChunkCount(1)
         % Save
         d3.writeChunkStack(SBASFile,SBASTimeseries,j,i,GridLong,GridLat,PostingDate,ChunkSize)
         d3.writeChunkStack(ResidualFile,Residual,j,i,GridLong,GridLat,PostingDate,ChunkSize)
-        
-        Velocity= saveChunkMATFile2(OutputFile,"Velocity",VelocityChunk,j,i,ChunkSize,Size);
-        Constant= saveChunkMATFile2(OutputFile,"Constant",ConstantChunk,j,i,ChunkSize,Size);
-        Coseismic= saveChunkMATFile2(OutputFile,"Coseismic",CoseismicChunk,j,i,ChunkSize,Size);
-        PostSeismic= saveChunkMATFile2(OutputFile,"PostSeismic",PostSeismicChunk,j,i,ChunkSize,Size);
-        RMSE= saveChunkMATFile2(OutputFile,"RMSE",RMSEChunk,j,i,ChunkSize,Size);
+        Parameters= work.saveChunkMATFile2(OutputFile,"Parameters",ParametersChunk,j,i,ChunkSize,Size);
+        work.saveChunkMATFile2(OutputFile,"RMSE",RMSEChunk,j,i,ChunkSize,Size);
         
         
         fprintf("Referenced SBAS timeseries for tile %d/%d. Elapsed time %0.1f min\n", ...
@@ -95,49 +99,10 @@ for j= 1:ChunkCount(1)
         
         
         % Plot
-        h.CData= Velocity;
-        drawnow
+        if Plot
+            h.CData= Parameters(:,:,1);
+            drawnow
+        end
     end
 end
 
-
-%%
-
-load(OutputFile)
-
-figure(1)
-imagesc(GridLong,GridLat,Velocity);
-setOptions
-c= colorbar;
-c.Label.String= "Velocity (mm/yr)";
-clim([-1 1]*5)
-
-figure(2)
-imagesc(GridLong,GridLat,Coseismic);
-setOptions
-c= colorbar;
-c.Label.String= "Coseismic Displacement (mm)";
-clim([-1 1]*600)
-
-figure(3)
-imagesc(GridLong,GridLat,Constant);
-setOptions
-c= colorbar;
-c.Label.String= "Displacement Constant (mm)";
-clim([-1 1]*20)
-
-
-figure(4)
-imagesc(GridLong,GridLat,PostSeismic*.4);
-setOptions
-c= colorbar;
-c.Label.String= "Postseismic Displacement @ 1yr (mm)";
-clim([-1 1]*30)
-
-
-figure(5)
-imagesc(GridLong,GridLat,RMSE);
-setOptions
-c= colorbar;
-c.Label.String= "RMSE (mm)";
-clim([0 1]*30)
