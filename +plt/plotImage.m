@@ -3,8 +3,8 @@
 function [h,c]= plotImage(GridLong,GridLat,Z,illuminationImage,cmap,Range)
 
 arguments
-    GridLong
-    GridLat
+    GridLong (:,1)
+    GridLat (:,1)
     Z
     illuminationImage
     cmap= [];
